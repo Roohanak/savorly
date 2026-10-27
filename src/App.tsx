@@ -420,19 +420,23 @@ export default function App() {
     if (!item) return;
     if (
       !confirm(
-        `Move “${item.title}” to Recently deleted? You can restore it in Settings.`,
+        `Move “${item.title || "Untitled experiment"}” to Recently deleted? You can restore it in Settings.`,
       )
     )
       return;
-    aiRequest.current?.abort();
-    setBusy(false);
-    setOutput("");
+    if (id === selected) {
+      aiRequest.current?.abort();
+      setBusy(false);
+      setOutput("");
+    }
     setRecipes((list) =>
       list.map((r) => (r.id === id ? { ...r, deletedAt: Date.now() } : r)),
     );
     setDeletedId(id);
-    const next = recipesRef.current.find((r) => !r.deletedAt);
-    navigate("journal", next?.id ?? "");
+    if (id === selected) {
+      const next = recipesRef.current.find((r) => !r.deletedAt);
+      navigate("journal", next?.id ?? "");
+    }
     setStatus("Experiment moved to Recently deleted.");
   }
   function restoreExperiment(id: string) {
@@ -647,8 +651,9 @@ export default function App() {
                   .includes(search.toLowerCase()),
               )
               .map((r) => (
+                <div className="experiment-row" key={r.id}>
                 <button
-                  key={r.id}
+                  type="button"
                   className={
                     "recipe-link " + (r.id === selected ? "active" : "")
                   }
@@ -656,13 +661,15 @@ export default function App() {
                 >
                   <span className="recipe-icon">♧</span>
                   <span>
-                    {r.title}
+                    {r.title || "Untitled experiment"}
                     <small>
                       {pagesFor(r).length} notebook pages · {r.attempts.length}{" "}
                       attempts
                     </small>
                   </span>
                 </button>
+                <button type="button" className="sidebar-delete danger" aria-label={`Delete experiment ${r.title || "Untitled experiment"}`} onClick={() => deleteExperiment(r.id)}>Delete</button>
+                </div>
               ))}
             {!recipes.some((r) =>
               (r.title + r.category)

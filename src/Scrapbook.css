@@ -843,3 +843,8 @@
 .shopping-panel .grocery-sticky .sticky-empty {
   display: none;
 }
+.experiment-row { display:grid; min-width:0; border-bottom:1px solid #eadbd14d; }
+.sectioned-app .experiment-row .recipe-link { width:100%; min-width:0; }
+.sectioned-app .experiment-row .sidebar-delete { justify-self:end; margin:0 6px 10px; padding:5px 10px; min-height:32px; font-size:11px; border-color:#e7bcb5; color:#a53846; background:#fff8f2; }
+.sectioned-app .experiment-row .sidebar-delete:hover { background:#fbe3db; border-color:#c87878; }
+@media(max-width:650px) { .experiment-row { min-width:220px; flex:0 0 220px; } .sectioned-app .experiment-row .sidebar-delete { min-height:40px; } }
