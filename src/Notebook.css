@@ -1,0 +1,538 @@
+.sectioned-app .main-navigation {
+  display: grid;
+  gap: 5px;
+  margin: 4px 0 30px;
+}
+.main-navigation a {
+  display: flex;
+  gap: 13px;
+  align-items: center;
+  color: #737b69;
+  text-decoration: none;
+  font-size: 13px;
+  border-radius: 8px;
+  padding: 13px 14px;
+  min-height: 46px;
+}
+.main-navigation a span {
+  width: 20px;
+  font-size: 20px;
+  text-align: center;
+}
+.main-navigation a[aria-current="page"] {
+  background: #e4ead7;
+  color: #385536;
+  font-weight: 600;
+}
+.main-navigation a:hover {
+  background: #ebeee2;
+}
+.sectioned-app .sidebar {
+  min-width: 0;
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  overflow-y: auto;
+  align-self: start;
+}
+.experiment-title {
+  font-size: 10px;
+}
+.experiment-title input {
+  font:
+    500 25px "Lora",
+    serif;
+  background: transparent;
+  padding: 8px 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  min-width: 0;
+}
+.sectioned-app .experiment-navigation {
+  display: grid;
+  gap: 5px;
+}
+.experiment-navigation .recipe-link > span:last-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.navigation-note {
+  padding: 40px 10px 10px;
+  font:
+    italic 18px/1.7 "Lora",
+    serif;
+  color: #8a927a;
+  margin-top: auto;
+}
+.sectioned-app .global-status {
+  position: static;
+  border-radius: 6px;
+  margin: 0 0 20px;
+  background: #eff2e7;
+  color: #6c795d;
+  font-size: 11px;
+}
+.sectioned-app .page-heading {
+  padding-bottom: 18px;
+}
+.journal-workspace {
+  max-width: 1050px;
+  margin: auto;
+}
+.notebook-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.notebook-heading h2 {
+  font:
+    500 25px "Lora",
+    serif;
+  margin: 0;
+}
+.notebook-heading .eyebrow {
+  font-size: 9px;
+  margin: 0 0 10px;
+}
+.notebook-heading button {
+  font-size: 12px;
+  background: #fffefa;
+}
+.page-strip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 5px 0 15px;
+  margin-bottom: 14px;
+}
+.page-strip button {
+  min-width: 140px;
+  max-width: 240px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  background: #f2f1e9;
+  border-color: #e3e2d5;
+  min-height: 46px;
+}
+.page-strip button span {
+  color: #999e89;
+  margin-right: 6px;
+  font-size: 10px;
+}
+.page-strip button[aria-pressed="true"] {
+  background: #fffefa;
+  color: #3c5738;
+  border-color: #99a988;
+  box-shadow: 0 3px 6px #35472b08;
+}
+.notebook-page-title {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: space-between;
+}
+.notebook-page-title label {
+  flex: 1;
+}
+.notebook-page-title input {
+  font:
+    500 24px "Lora",
+    serif;
+  border: 0;
+  border-bottom: 1px solid #dfe3d5;
+  border-radius: 0;
+  padding: 10px 0;
+  background: transparent;
+}
+.writing-toolbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  background: #e9ecdf;
+  padding: 10px;
+  border-radius: 10px 10px 0 0;
+}
+.tool-group {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.writing-toolbar button {
+  font-size: 12px;
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  padding: 9px 13px;
+}
+.writing-toolbar button[aria-pressed="true"] {
+  color: #fffefa;
+  background: #3f593f;
+}
+.writing-toolbar button span {
+  font-size: 18px;
+  margin-right: 4px;
+}
+.paper-options {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  background: #f0f1e8;
+  padding: 8px 14px;
+}
+.paper-options label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 0;
+  font-size: 11px;
+}
+.paper-options select {
+  width: auto;
+  margin: 0;
+  padding: 7px;
+  font-size: 12px;
+  min-height: 40px;
+}
+.paper-options input[type="color"] {
+  width: 38px;
+  height: 38px;
+  padding: 2px;
+  margin: 0;
+}
+.paper-options .finger-option {
+  font-size: 11px;
+}
+.paper-options input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+}
+.paper-options > button {
+  margin-left: auto;
+}
+.writing-hint {
+  font-size: 11px;
+  line-height: 1.7;
+  color: #838d76;
+  padding: 10px 14px;
+  margin: 0;
+  background: #f6f6ee;
+}
+.notebook-paper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 900 / 1100;
+  background-color: #fffef8;
+  box-shadow: 0 7px 20px #37452c0a;
+  border: 1px solid #e6e3d4;
+  overflow: hidden;
+}
+.notebook-paper::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 6%;
+  border-left: 1px solid #d8aaa94d;
+  pointer-events: none;
+  z-index: 1;
+}
+.paper-lined {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 35px,
+    #9aa98b22 35px,
+    #9aa98b22 36px
+  );
+}
+.paper-dots {
+  background-image: radial-gradient(#879b6f44 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+.notebook-paper textarea {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  resize: none;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  padding: 36px 5% 36px 9%;
+  background: transparent;
+  font:
+    20px/36px "Lora",
+    serif;
+  color: #4e5943;
+  box-shadow: none;
+  outline-offset: -4px;
+}
+.notebook-paper svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.tool-pen svg {
+  cursor: crosshair;
+}
+.tool-eraser svg {
+  cursor: cell;
+}
+.tool-scroll {
+  touch-action: pan-y;
+}
+.tool-scroll textarea {
+  pointer-events: none;
+}
+.notebook-footnote {
+  font-size: 10px;
+  color: #919982;
+  padding: 12px 0 6px;
+}
+.journal-workspace > .photo-section {
+  margin-top: 20px;
+}
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+.template-card {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+.template-card h2 {
+  font:
+    500 20px "Lora",
+    serif;
+  margin: 18px 0 8px;
+}
+.template-card > p {
+  font-size: 12px;
+  color: #8b927c;
+  line-height: 1.8;
+  flex: 1;
+}
+.template-card > button {
+  text-align: left;
+  border: 0;
+  padding: 10px 0;
+  background: transparent;
+  font-size: 12px;
+  color: #546c44;
+}
+.template-preview {
+  height: 180px;
+  border: 1px solid #e4e4d5;
+  background-color: #fbfaf2;
+  padding: 18px;
+  overflow: hidden;
+  position: relative;
+}
+.template-preview > span {
+  position: absolute;
+  right: 15px;
+  bottom: 12px;
+  font-size: 55px;
+  color: #cad1b6;
+}
+.template-preview p {
+  font-size: 9px;
+  letter-spacing: 1px;
+  line-height: 2.4;
+  color: #a1a88e;
+}
+.settings-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 24px;
+}
+.settings-card {
+  padding: 28px;
+  align-self: start;
+}
+.settings-card h2 {
+  font:
+    24px "Lora",
+    serif;
+}
+.settings-card > p {
+  font-size: 13px;
+  line-height: 1.9;
+  color: #879079;
+}
+.settings-card > .text-button {
+  display: block;
+  min-height: 44px;
+}
+.settings-card > .restore-picker {
+  display: flex;
+  width: max-content;
+}
+.settings-card .cloud-sync {
+  border-top: 1px solid #dde2d1;
+  padding-top: 18px;
+  margin-top: 20px;
+}
+.companion-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 1.3fr);
+  gap: 24px;
+  align-items: start;
+}
+.companion-context {
+  padding: 28px;
+}
+.companion-context h2 {
+  font:
+    25px/1.5 "Lora",
+    serif;
+}
+.companion-context > p:not(.eyebrow) {
+  font-size: 13px;
+  line-height: 1.9;
+  color: #89917c;
+}
+.companion-context button {
+  margin: 10px 8px 0 0;
+  font-size: 12px;
+}
+.companion-page .assistant-actions {
+  grid-template-columns: 1fr;
+}
+.recipe-page-editor,
+.attempts-page {
+  max-width: 900px;
+  margin: auto;
+}
+.section-recipe-label {
+  font:
+    24px "Lora",
+    serif;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e1e4d6;
+}
+@media (max-width: 1200px) {
+  .template-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .settings-layout,
+  .companion-page {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 900px) {
+  .notebook-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .notebook-paper textarea {
+    font-size: 17px;
+    line-height: 30px;
+    padding-top: 30px;
+  }
+  .notebook-paper.paper-lined {
+    background-size: auto;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 29px,
+      #9aa98b22 29px,
+      #9aa98b22 30px
+    );
+  }
+  .writing-toolbar {
+    gap: 4px;
+  }
+  .writing-toolbar button {
+    padding: 9px;
+    font-size: 11px;
+  }
+}
+@media (max-width: 650px) {
+  .sectioned-app .main-navigation {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
+    margin: 12px 0;
+  }
+  .main-navigation a {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 10px;
+    padding: 8px 4px;
+    text-align: center;
+  }
+  .main-navigation a span {
+    font-size: 19px;
+  }
+  .sectioned-app .sidebar-heading,
+  .navigation-note {
+    display: none;
+  }
+  .sectioned-app .experiment-navigation {
+    display: flex;
+    overflow-x: auto;
+  }
+  .sectioned-app .experiment-navigation .recipe-link {
+    min-width: 220px;
+  }
+  .template-grid {
+    grid-template-columns: 1fr;
+  }
+  .notebook-page-title input {
+    font-size: 21px;
+  }
+  .paper-options {
+    gap: 10px;
+  }
+  .notebook-paper textarea {
+    font-size: 16px;
+    line-height: 28px;
+    padding-top: 28px;
+  }
+  .notebook-paper.paper-lined {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 27px,
+      #9aa98b22 27px,
+      #9aa98b22 28px
+    );
+  }
+  .writing-toolbar .tool-group {
+    gap: 2px;
+  }
+  .writing-toolbar button {
+    padding: 8px;
+  }
+  .template-preview {
+    height: 170px;
+  }
+}
+@media (max-width: 650px) {
+  .sectioned-app .sidebar {
+    position: static;
+    height: auto;
+    overflow-y: visible;
+  }
+  .notebook-heading > div {
+    max-width: 100%;
+  }
+  .experiment-title input {
+    font-size: 23px;
+  }
+}

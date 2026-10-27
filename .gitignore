@@ -1,0 +1,47 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+.env
+.env.*
+!.env.example
+backup-before-savorly-*/
+
+backup-before-photos-*/
+
+backup-before-notebook-*/
+
+backup-before-color-pages-*/
+
+backup-before-workflow-*/
+
+# Local backups, journal exports, credentials and build metadata
+backup-before-*/
+*.backup
+*.tsbuildinfo
+savorly-journal*.json
+savorly-recovery*.json
+*.pem
+*.key
+coverage/

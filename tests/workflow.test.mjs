@@ -1,0 +1,13 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { parseRecipeDraft } from '../src/recipeDraft.ts';
+import { shoppingFor, validatePlans, shiftDate, monday } from '../src/planner.ts';
+import { inkPoint, strokePath } from '../src/ink.ts';
+import { parseBackup } from '../src/model.ts';
+const recipe={id:'r',title:'Crepes',category:'Breakfast',servings:2,ingredients:'1 cup lentils\n½ cup cheese\n1/4 tsp cumin',steps:'Blend',notes:'',attempts:[]};
+const plan={week:'2026-10-19',meals:[{id:'m',date:'2026-10-20',slot:'Dinner',recipeId:'r',label:'Crepes',servings:4,cooked:false}],notes:'',customShopping:[],shoppingChecked:[]};
+test('recipe draft strips formatting and keeps quantities and next attempt',()=>{const d=parseRecipeDraft('# Crepes\n**Servings:** 2\n**Ingredients**\n- 1 cup lentils\n**Method**\n1. Blend\n**Next attempt**\nMore water',recipe); assert.equal(d.title,'Crepes');assert.equal(d.ingredients,'1 cup lentils');assert.equal(d.steps,'Blend');assert.equal(d.notes,'More water');});
+test('planner scales fractions and excludes cooked meals',()=>{assert.deepEqual(shoppingFor(plan,[recipe]).map(x=>x.label),['2 cup lentils','1 cup cheese','0.5 tsp cumin']);assert.equal(shoppingFor({...plan,meals:[{...plan.meals[0],cooked:true}]},[recipe]).length,0);});
+test('planner validates dates and week boundaries',()=>{validatePlans([plan]);assert.throws(()=>validatePlans([{...plan,meals:[{...plan.meals[0],date:'2026-10-26'}]}]));assert.equal(shiftDate('2026-12-31',1),'2027-01-01');assert.equal(monday(new Date(2026,9,25)),'2026-10-19');});
+test('drawing coordinates stay inside pad and strokes are smooth',()=>{assert.deepEqual(inkPoint(150,250,{left:100,top:200,width:100,height:100}),{x:450,y:550,pressure:0.5});assert.equal(inkPoint(-1,999,{left:0,top:0,width:100,height:100}).y,1100);assert.match(strokePath([{x:0,y:0},{x:20,y:20},{x:40,y:0}]),/ Q/);});
+test('backup retains planner and recoverable deletion',()=>{const backup={version:2,recipes:[{...recipe,deletedAt:123}],photos:[],planner:[plan]};assert.deepEqual(parseBackup(backup),backup);});

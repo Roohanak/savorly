@@ -1,0 +1,455 @@
+/* Cozy paper workspace. The supplied photo is a backdrop, not a flattened UI. */
+.scrapbook-theme {
+  --scrap-ink: #414536;
+  --scrap-green: #677556;
+  --scrap-paper: #fffdf6;
+  position: relative;
+  isolation: isolate;
+  width: calc(100% - 48px);
+  max-width: 1540px;
+  margin: 24px auto;
+  border-radius: 16px;
+  box-shadow: 0 20px 80px #302c2340;
+  grid-template-columns: 220px minmax(0, 1fr);
+}
+.scrapbook-theme::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(#e5dfd455, #e5dfd455),
+    url("/backgrounds/cozy-notebook.png") center/cover;
+  z-index: -2;
+  pointer-events: none;
+}
+.sectioned-app.scrapbook-theme {
+  background: transparent;
+  color: var(--scrap-ink);
+}
+.sectioned-app.scrapbook-theme .sidebar {
+  background: #f8f6edee;
+  border-color: #d8d5c5;
+  border-radius: 16px 0 0 16px;
+}
+.sectioned-app.scrapbook-theme main {
+  background-color: #fffdf6f5;
+  background-image:
+    url("/backgrounds/kitchen-doodles.svg"),
+    radial-gradient(#aca89160 0.7px, transparent 0.8px);
+  background-size:
+    800px 700px,
+    20px 20px;
+  border-radius: 0 16px 16px 0;
+  padding-bottom: 24px;
+}
+.sectioned-app.scrapbook-theme .brand,
+.sectioned-app.scrapbook-theme .brand span {
+  color: #596748;
+}
+.sectioned-app.scrapbook-theme .primary {
+  background: #677556;
+  border-color: #677556;
+}
+.sectioned-app.scrapbook-theme .primary:hover {
+  background: #566449;
+  border-color: #566449;
+}
+.sectioned-app.scrapbook-theme .main-navigation a[aria-current="page"] {
+  background: #e9eddd;
+  color: #4e6040;
+}
+.sectioned-app.scrapbook-theme .page-heading h1 {
+  letter-spacing: -1px;
+  color: #414536;
+}
+.sectioned-app.scrapbook-theme .global-status {
+  background: #f2efe5d9;
+  color: #676a58;
+}
+.sectioned-app .appearance-toggle {
+  padding: 7px 11px;
+  font-size: 11px;
+  background: #f7f4e8;
+  border-color: #d9d8c5;
+  color: #596748;
+  white-space: nowrap;
+}
+.sectioned-app.scrapbook-theme .card {
+  background-color: #fffdf8ec;
+  border-color: #dedccb;
+  box-shadow: 0 3px 15px #655b4008;
+}
+/* The drawing surface belongs to the paper; it is no longer another boxed card. */
+.sectioned-app.scrapbook-theme .bounded-editor {
+  background: #fffdf7;
+  background-image: radial-gradient(#a8a39466 0.7px, transparent 0.8px);
+  background-size: 20px 20px;
+  border: 1px solid #e4dfce;
+  border-radius: 7px;
+  box-shadow:
+    inset 14px 0 25px -22px #39372755,
+    0 8px 25px #4c493b10;
+}
+.sectioned-app.scrapbook-theme .bounded-editor .notebook-paper {
+  background-color: transparent;
+  border: 0;
+  box-shadow: none;
+}
+.sectioned-app.scrapbook-theme .drawing-panel {
+  background: transparent;
+  border: 0;
+  border-top: 1px dashed #d6d1bf;
+  border-radius: 0;
+  margin-top: 0;
+  padding: 24px;
+}
+.sectioned-app.scrapbook-theme .ink-pad {
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+  background-image:
+    url("/backgrounds/kitchen-doodles.svg"),
+    radial-gradient(#a8a39466 0.7px, transparent 0.8px);
+  background-size:
+    800px 700px,
+    20px 20px;
+}
+.sectioned-app.scrapbook-theme .ink-pad.paper-lined {
+  background-image:
+    url("/backgrounds/kitchen-doodles.svg"),
+    repeating-linear-gradient(
+      transparent 0,
+      transparent 35px,
+      #d5d0ba66 35px,
+      #d5d0ba66 36px
+    );
+  background-size:
+    800px 700px,
+    auto;
+}
+.sectioned-app.scrapbook-theme .canvas-writing-tools,
+.sectioned-app.scrapbook-theme .bounded-editor .writing-toolbar {
+  background: #fffdf5f5;
+  border-color: #dedaca;
+}
+.sectioned-app.scrapbook-theme
+  .canvas-writing-tools
+  button[aria-pressed="true"],
+.sectioned-app.scrapbook-theme
+  .bounded-editor
+  .writing-toolbar
+  button[aria-pressed="true"] {
+  background: #677556;
+  border-color: #677556;
+}
+/* Sticker tray and real movable objects, saved with the page. */
+.sticker-tools {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 12px 0 20px;
+}
+.sticker-tools > button {
+  background: #f6eee9;
+  color: #765b54;
+  border-color: #e4d4ca;
+  font-size: 12px;
+}
+.sticker-hint {
+  font:
+    italic 13px Lora,
+    serif;
+  color: #8a8274;
+}
+.sticker-picker {
+  flex-basis: 100%;
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 7px;
+  padding: 12px;
+  background: #fffaf0;
+  border: 1px dashed #d9cebc;
+  border-radius: 12px;
+}
+.sectioned-app .sticker-picker button {
+  min-width: 0;
+  padding: 6px;
+  background: #fffdf7;
+  border-color: transparent;
+}
+.sectioned-app .sticker-picker button:hover {
+  background: #f4e9dd;
+  border-color: #dbccba;
+}
+.sticker-picker .sticker-art {
+  width: 100%;
+  height: 58px;
+}
+.sticker-picker button span {
+  display: block;
+  text-transform: capitalize;
+  font-size: 9px;
+  color: #777663;
+}
+.sticker-adjust {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 12px;
+}
+.sticker-adjust label {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.sticker-adjust input {
+  width: 90px;
+}
+.canvas-sticker-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.placed-sticker {
+  position: absolute;
+  cursor: grab;
+  touch-action: none;
+  border: 1px dashed transparent;
+}
+.placed-sticker.selected {
+  border-color: #85966c;
+}
+.placed-sticker:focus-visible {
+  outline: 3px solid #becba5;
+}
+.placed-sticker > span {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+.ink-pad .placed-sticker .sticker-art {
+  position: static;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+  filter: drop-shadow(0 2px 0 #fff9eb);
+}
+/* A notebook spread: open planning on the left, four sticky lists on the right. */
+.scrapbook-theme .planner-layout {
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 28px;
+}
+.scrapbook-theme .planner-main {
+  background: transparent;
+}
+.sectioned-app.scrapbook-theme .day-card {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 14px 5px 18px;
+  border-bottom: 1px dashed #d6d0be;
+}
+.scrapbook-theme .day-card > header {
+  border: 0;
+  padding-bottom: 4px;
+}
+.scrapbook-theme .day-card h2 {
+  font-style: italic;
+  color: #596147;
+}
+.scrapbook-theme .day-card header span {
+  color: #8b8875;
+}
+.scrapbook-theme .day-card header button {
+  background: #fffdf4aa;
+  border-style: dashed;
+  border-color: #cec9b7;
+}
+.scrapbook-theme .day-empty {
+  color: #938d79;
+}
+.scrapbook-theme .shopping-panel {
+  position: static;
+  padding: 0 0 0 22px;
+  border: 0;
+  border-left: 1px solid #d9d4c1;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.scrapbook-theme .shopping-panel h2 {
+  font-style: italic;
+  font-size: 29px;
+}
+.scrapbook-theme .shopping-panel > .eyebrow {
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: #8b8d72;
+}
+.shopping-notes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 12px;
+  margin: 24px 0;
+}
+.grocery-sticky {
+  --sticky: #eee7a9;
+  position: relative;
+  background: var(--sticky);
+  padding: 20px 12px 15px;
+  box-shadow: 1px 4px 5px #49432a22;
+  border-radius: 1px 1px 8px 2px;
+  min-width: 0;
+  min-height: 180px;
+  transform: rotate(-1deg);
+}
+.grocery-sticky::before {
+  content: "";
+  position: absolute;
+  width: 50px;
+  height: 18px;
+  background: #e1d6ba8c;
+  top: -8px;
+  left: calc(50% - 25px);
+  transform: rotate(-7deg);
+}
+.grocery-sticky.sticky-1 {
+  --sticky: #e4e8be;
+  transform: rotate(1deg);
+}
+.grocery-sticky.sticky-2 {
+  --sticky: #f1dfc5;
+  transform: rotate(0.7deg);
+}
+.grocery-sticky.sticky-3 {
+  --sticky: #e9d9da;
+  transform: rotate(-0.6deg);
+}
+.grocery-sticky h3 {
+  margin: 0 0 12px;
+  font:
+    italic 17px/1.25 Lora,
+    serif;
+  color: #4d513b;
+}
+.shopping-panel .grocery-sticky ul {
+  margin: 0;
+}
+.shopping-panel .grocery-sticky li {
+  padding: 8px 0;
+  border-color: #87836b30;
+  align-items: start;
+}
+.shopping-panel .grocery-sticky li label {
+  font-size: 11px;
+  color: #4b4e3f;
+  line-height: 1.7;
+  gap: 6px;
+  overflow-wrap: anywhere;
+}
+.shopping-panel .grocery-sticky input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  accent-color: #687556;
+  margin-top: 2px;
+}
+.shopping-panel .grocery-sticky li button {
+  padding: 0 3px;
+  min-height: 24px;
+  background: transparent;
+  border: 0;
+  color: #786753;
+}
+.sticky-empty {
+  font:
+    italic 12px/1.8 Lora,
+    serif;
+  color: #7c7e5f;
+}
+.scrapbook-theme .shopping-panel > p,
+.scrapbook-theme .shopping-panel > small {
+  color: #767b64;
+}
+.scrapbook-theme .week-notes textarea {
+  border: 0;
+  border-bottom: 1px dashed #cfc8b3;
+  border-radius: 0;
+  background: #fffdf299;
+}
+.sectioned-app.scrapbook-theme .linked-weekly-planner .planner-layout {
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 0.85fr);
+}
+.sectioned-app.scrapbook-theme .linked-weekly-planner .week-days {
+  grid-template-columns: 1fr;
+}
+.sectioned-app.scrapbook-theme .linked-weekly-planner {
+  padding: 0 10px 20px;
+}
+.sectioned-app.scrapbook-theme .linked-planner-note {
+  background: #f0eddfd9;
+  color: #6a7457;
+}
+@media (max-width: 1100px) {
+  .scrapbook-theme {
+    width: calc(100% - 24px);
+    margin: 12px auto;
+    grid-template-columns: 190px minmax(0, 1fr);
+  }
+  .scrapbook-theme .planner-layout,
+  .sectioned-app.scrapbook-theme .linked-weekly-planner .planner-layout {
+    grid-template-columns: 1fr;
+  }
+  .scrapbook-theme .shopping-panel {
+    border-left: 0;
+    border-top: 1px dashed #d9d4c1;
+    padding: 24px 0 0;
+  }
+  .shopping-notes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .sticker-picker {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+@media (max-width: 650px) {
+  .sectioned-app.scrapbook-theme {
+    width: calc(100% - 12px);
+    margin: 6px auto;
+  }
+  .sectioned-app.scrapbook-theme .sidebar {
+    border-radius: 12px 12px 0 0;
+  }
+  .sectioned-app.scrapbook-theme main {
+    border-radius: 0 0 12px 12px;
+  }
+  .scrapbook-theme .planner-layout {
+    gap: 20px;
+  }
+  .shopping-notes {
+    grid-template-columns: 1fr 1fr;
+  }
+  .sectioned-app.scrapbook-theme .drawing-panel {
+    padding: 12px;
+  }
+  .sticker-picker {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 2px;
+    padding: 6px;
+  }
+  .sticker-picker .sticker-art {
+    height: 40px;
+  }
+  .scrapbook-theme .appearance-toggle {
+    font-size: 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .grocery-sticky {
+    transform: none;
+  }
+}
