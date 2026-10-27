@@ -45,6 +45,8 @@ Never put `AI_API_KEY` in a `VITE_` variable, frontend source, screenshots, issu
 
 ## Scrapbook appearance and stickers
 
+The scrapbook palette uses cherry-red gingham accents, cream paper and brighter pastel notes. Handwritten headings and journal text use locally hosted Gaegu (regular/bold); its SIL Open Font License is included in `public/fonts/Gaegu-OFL.txt`. Smaller UI labels retain their readable sans-serif font.
+
 The top-bar **Scrapbook / Plain paper** button switches between the cozy notebook-photo backdrop and the original white workspace; the preference stays on this device. Sketches blend into dotted/lined paper in Scrapbook mode. Grocery items appear in four sticky-note groups (Produce, Dairy & protein, Pantry, Other); automatic keyword grouping is a visual convenience, not a food taxonomy.
 
 Inside a notebook's Handwriting & sketches area, open **Stickers** to add original vector pasta, strawberry, mushroom, flower, cat, chicken, heart, sparkle, coffee or bread doodles. Use **Move photos / Text** to drag stickers, or focus a sticker and use arrow keys. Select it to adjust size/tilt or remove it. Choose Pen to draw over stickers/photos. Up to 30 stickers per page; positions, size and tilt are saved with the notebook and included in validated backups/cloud snapshots. Ink and stickers are not sent to AI.
