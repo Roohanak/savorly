@@ -393,6 +393,24 @@ export default function Planner({
               ) && (
                 <p className="sticky-empty">A little room for what you need.</p>
               )}
+              <label className="sticky-writing-label">
+                <span>Write on this note</span>
+                <textarea
+                  aria-label={group + " sticky note"}
+                  rows={4}
+                  maxLength={10000}
+                  placeholder="Tap here and write your list…"
+                  value={plan.stickyNotes?.[group] ?? ""}
+                  onChange={(e) =>
+                    update({
+                      stickyNotes: {
+                        ...plan.stickyNotes,
+                        [group]: e.target.value,
+                      },
+                    })
+                  }
+                />
+              </label>
             </section>
           ))}
         </div>

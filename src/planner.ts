@@ -12,6 +12,7 @@ export type WeekPlan = {
   week: string;
   meals: Meal[];
   notes: string;
+  stickyNotes?: Record<string, string>;
   customShopping: string[];
   shoppingChecked: string[];
 };
@@ -41,6 +42,17 @@ export function validatePlans(value: unknown): asserts value is WeekPlan[] {
         w &&
         validDate(w.week) &&
         typeof w.notes === "string" &&
+        (w.stickyNotes === undefined ||
+          (typeof w.stickyNotes === "object" &&
+            w.stickyNotes !== null &&
+            !Array.isArray(w.stickyNotes) &&
+            Object.keys(w.stickyNotes).length <= 4 &&
+            Object.entries(w.stickyNotes).every(
+              ([key, value]) =>
+                groceryGroups.includes(key as (typeof groceryGroups)[number]) &&
+                typeof value === "string" &&
+                value.length <= 10000,
+            ))) &&
         Array.isArray(w.customShopping) &&
         w.customShopping.every((s: unknown) => typeof s === "string") &&
         Array.isArray(w.shoppingChecked) &&

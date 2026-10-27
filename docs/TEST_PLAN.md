@@ -11,6 +11,8 @@ Use synthetic cooking notes in a separate browser profile. Never test destructiv
 - [ ] With a personal Nebius key, turn sparse notes into a recipe. Missing quantities must remain missing; no internal planning appears. Test account errors/offline behavior. Never expose credentials in the browser or issue screenshots.
 - [ ] Edit an AI draft and save it. The original notebook remains intact; the new recipe appears as a clickable Recipe Book card with ingredients and method.
 - [ ] Add a meal through the weekly notebook template; see it in Meal Planner for the same week. Edit in the other view; confirm notes, meals and grocery counts agree. Other weeks remain independent.
+- [ ] Assign a default recipe category and a custom subcategory; check filtering, custom names, reload and backup restoration.
+- [ ] Type multiline text directly in each grocery sticky; verify it persists after reload and matches the weekly notebook view.
 - [ ] Verify grocery servings scaling, fractions, cooked filter, custom items, sticky-note classification and checked state after reload. Do not assume automatic unit conversion.
 - [ ] Delete an experiment, undo it, delete again and restore from Settings after reload. Log and remove an attempt. Confirm photos remain recoverable as intended.
 - [ ] Export a complete journal and restore it into a separate browser profile; confirm notebook fields, photos, ink, stickers, planner and trash survive. Invalid backups must not replace saved data.

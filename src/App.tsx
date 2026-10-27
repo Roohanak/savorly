@@ -1,3 +1,8 @@
+import {
+  categoryOptions,
+  defaultSubcategories,
+  sameCategory,
+} from "./categories";
 import RecipeBook from "./RecipeBook";
 import AIResult from "./AIResult";
 import type { RecipeDraft } from "./recipeDraft";
@@ -862,11 +867,56 @@ export default function App() {
                   </label>
                   <div className="metadata">
                     <label>
-                      Collection
+                      Category
                       <input
+                        list="recipe-category-options"
+                        maxLength={100}
+                        placeholder="Choose or type your own…"
                         value={recipe.category}
-                        onChange={(e) => update({ category: e.target.value })}
+                        onChange={(e) =>
+                          update({ category: e.target.value, subcategory: "" })
+                        }
                       />
+                      <datalist id="recipe-category-options">
+                        {categoryOptions(recipes.map((r) => r.category)).map(
+                          (c) => (
+                            <option key={c} value={c} />
+                          ),
+                        )}
+                      </datalist>
+                    </label>
+                    <label>
+                      Subcategory (optional)
+                      <input
+                        list="recipe-subcategory-options"
+                        maxLength={100}
+                        placeholder="e.g. Creamy, Sourdough, Curries…"
+                        value={recipe.subcategory ?? ""}
+                        onChange={(e) =>
+                          update({ subcategory: e.target.value })
+                        }
+                      />
+                      <datalist id="recipe-subcategory-options">
+                        {[
+                          ...new Set([
+                            ...(Object.entries(defaultSubcategories).find(
+                              ([key]) => sameCategory(key, recipe.category),
+                            )?.[1] ?? []),
+                            ...recipes
+                              .filter((r) =>
+                                sameCategory(r.category, recipe.category),
+                              )
+                              .map((r) => r.subcategory)
+                              .filter((s): s is string => Boolean(s)),
+                          ]),
+                        ].map((c) => (
+                          <option key={c} value={c} />
+                        ))}
+                      </datalist>
+                      <small>
+                        Pick a suggestion or type a custom name. Changes save
+                        automatically.
+                      </small>
                     </label>
                     <label>
                       Base servings

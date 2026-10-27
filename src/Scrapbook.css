@@ -453,49 +453,393 @@
     transform: none;
   }
 }
-@font-face { font-family:"Gaegu"; font-style:normal; font-weight:400; font-display:swap; src:url('/fonts/gaegu-400.woff2') format('woff2'); }
-@font-face { font-family:"Gaegu"; font-style:normal; font-weight:700; font-display:swap; src:url('/fonts/gaegu-700.woff2') format('woff2'); }
+@font-face {
+  font-family: "Gaegu";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/gaegu-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Gaegu";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/gaegu-700.woff2") format("woff2");
+}
 
 /* Cherry gingham and handwritten labels, inspired by a handmade recipe journal. */
-.scrapbook-theme { --scrap-ink:#533d38; --scrap-green:#b8424d; --scrap-paper:#fffaf0; }
-.scrapbook-theme::after { content:""; position:absolute; inset:-8px; z-index:-1; pointer-events:none; border-radius:22px; background-color:#fff7e6; background-image:repeating-linear-gradient(0deg,#c5404d70 0 13px,transparent 13px 26px),repeating-linear-gradient(90deg,#c5404d70 0 13px,transparent 13px 26px); box-shadow:0 0 0 3px #fffdf4,0 15px 35px #693f3629; }
-.sectioned-app.scrapbook-theme .sidebar { background:#fff8eeef; border-color:#e7c2b4; }
-.scrapbook-theme .sidebar::before { content:"made with a little love"; display:block; margin:0 -4px 20px; padding:8px 3px; text-align:center; color:#8a2d3a; font:700 21px/1.1 Gaegu,"Comic Sans MS",cursive; background-color:#fff9ef; background-image:repeating-linear-gradient(0deg,#e9a1a44d 0 10px,transparent 10px 20px),repeating-linear-gradient(90deg,#e9a1a44d 0 10px,transparent 10px 20px); border:2px dashed #cf66706b; border-radius:7px; transform:rotate(-2deg); }
-.sectioned-app.scrapbook-theme .brand { color:#b23b49; font:700 53px/1 Gaegu,"Comic Sans MS",cursive; letter-spacing:-2px; }
-.sectioned-app.scrapbook-theme .brand span { color:#ca8a39; font-size:36px; }
-.sectioned-app.scrapbook-theme main { background-color:#fffaf3f7; background-image:url('/backgrounds/kitchen-doodles.svg'),radial-gradient(#b9957c55 .7px,transparent .8px); }
-.sectioned-app.scrapbook-theme .page-heading h1 { color:#a73e4b; font:700 clamp(34px,3.4vw,49px)/1.08 Gaegu,"Comic Sans MS",cursive; letter-spacing:-1px; text-shadow:3px 0 #fffdf5,-3px 0 #fffdf5,0 3px #fffdf5,0 -3px #fffdf5; }
-.sectioned-app.scrapbook-theme .page-heading p { color:#7f6256; }
-.sectioned-app.scrapbook-theme .primary { background:#b8424d; border-color:#b8424d; box-shadow:0 3px 0 #8c2b3922; }
-.sectioned-app.scrapbook-theme .primary:hover:not(:disabled) { background:#a33140; border-color:#a33140; }
-.sectioned-app.scrapbook-theme .main-navigation a[aria-current=page],.sectioned-app.scrapbook-theme .recipe-link.active { color:#a53846; background:#fbe3db; border-color:#e7b4ab; }
-.sectioned-app.scrapbook-theme .main-navigation a:hover { background:#fff0e8; }
-.sectioned-app.scrapbook-theme .appearance-toggle { color:#a53846; background:#fff0e5; border-color:#e7b6a8; }
-.sectioned-app.scrapbook-theme .global-status { background:#fff0db; color:#886047; }
-.sectioned-app.scrapbook-theme .day-card h2 { font:700 28px/1.1 Gaegu,"Comic Sans MS",cursive; color:#ac4552; }
-.sectioned-app.scrapbook-theme .shopping-panel h2 { font:700 36px/1.1 Gaegu,"Comic Sans MS",cursive; color:#ac4552; }
-.sectioned-app.scrapbook-theme .grocery-sticky h3 { font:700 25px/1.05 Gaegu,"Comic Sans MS",cursive; color:#694633; }
-.sectioned-app.scrapbook-theme .grocery-sticky { --sticky:#f5df83; }
-.sectioned-app.scrapbook-theme .grocery-sticky.sticky-1 { --sticky:#f4c6cb; }
-.sectioned-app.scrapbook-theme .grocery-sticky.sticky-2 { --sticky:#cce2bd; }
-.sectioned-app.scrapbook-theme .grocery-sticky.sticky-3 { --sticky:#f4d0a6; }
-.sectioned-app.scrapbook-theme .grocery-sticky::before { background:#dd9c974d; }
-.sectioned-app.scrapbook-theme .sticky-empty { color:#795f46; font:400 19px/1.15 Gaegu,"Comic Sans MS",cursive; }
-.sectioned-app.scrapbook-theme .shopping-panel .grocery-sticky li label { color:#654c3a; }
-.sectioned-app.scrapbook-theme .week-notes { font:700 24px Gaegu,"Comic Sans MS",cursive; color:#a3424e; }
-.sectioned-app.scrapbook-theme .week-notes textarea { font:400 23px/1.4 Gaegu,"Comic Sans MS",cursive; color:#604337; }
-.sectioned-app.scrapbook-theme .bounded-editor { background-color:#fffcf3; border-color:#e8c8b4; background-image:radial-gradient(#ba917660 .7px,transparent .8px); }
-.sectioned-app.scrapbook-theme .notebook-paper .page-letterhead strong { font:700 35px/1.1 Gaegu,"Comic Sans MS",cursive; color:#b24450; }
-.sectioned-app.scrapbook-theme .bounded-editor .notebook-paper .loose-notes textarea,.sectioned-app.scrapbook-theme .bounded-editor .template-writing textarea { font:400 25px/1.5 Gaegu,"Comic Sans MS",cursive; color:#65473b; }
-.sectioned-app.scrapbook-theme .drawing-heading h3 { font:700 29px/1.1 Gaegu,"Comic Sans MS",cursive; color:#b24450; }
-.sectioned-app.scrapbook-theme .sticker-hint { font:400 21px/1.2 Gaegu,"Comic Sans MS",cursive; color:#a85b59; }
-.sectioned-app.scrapbook-theme .sticker-tools > button { background:#fde5da; color:#a23c49; border-color:#eab4a3; }
-.sectioned-app.scrapbook-theme .sticker-picker { background:#fff3e6; border-color:#e6bb9e; }
-.sectioned-app.scrapbook-theme .canvas-writing-tools button[aria-pressed=true],.sectioned-app.scrapbook-theme .bounded-editor .writing-toolbar button[aria-pressed=true] { background:#b8424d; border-color:#b8424d; }
-.sectioned-app.scrapbook-theme .saved-recipe-card { border-top:5px solid #e9b4a5; }
-.sectioned-app.scrapbook-theme .saved-recipe-card:nth-child(3n+2) { border-top-color:#e5bd64; }
-.sectioned-app.scrapbook-theme .saved-recipe-card:nth-child(3n) { border-top-color:#a8c493; }
-.sectioned-app.scrapbook-theme .saved-recipe-card h3,.sectioned-app.scrapbook-theme .recipe-library-toolbar h2,.sectioned-app.scrapbook-theme .companion-context h2,.sectioned-app.scrapbook-theme .assistant h2 { font-family:Gaegu,"Comic Sans MS",cursive; font-weight:700; font-size:30px; color:#9f3c49; }
-.sectioned-app.scrapbook-theme .saved-recipe-symbol { background:#fce8dc; color:#b8424d; }
-.sectioned-app.scrapbook-theme .recipe-card-action { color:#a53846; }
-@media(max-width:650px) { .scrapbook-theme::after { inset:-3px; border-radius:15px; } .scrapbook-theme .sidebar::before { max-width:260px; margin:0 auto 15px; } .sectioned-app.scrapbook-theme .page-heading h1 { font-size:37px; } .sectioned-app.scrapbook-theme .bounded-editor .template-writing textarea { font-size:23px; } }
+.scrapbook-theme {
+  --scrap-ink: #533d38;
+  --scrap-green: #b8424d;
+  --scrap-paper: #fffaf0;
+}
+.scrapbook-theme::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 22px;
+  background-color: #fff7e6;
+  background-image:
+    repeating-linear-gradient(0deg, #c5404d70 0 13px, transparent 13px 26px),
+    repeating-linear-gradient(90deg, #c5404d70 0 13px, transparent 13px 26px);
+  box-shadow:
+    0 0 0 3px #fffdf4,
+    0 15px 35px #693f3629;
+}
+.sectioned-app.scrapbook-theme .sidebar {
+  background: #fff8eeef;
+  border-color: #e7c2b4;
+}
+.scrapbook-theme .sidebar::before {
+  content: "made with a little love";
+  display: block;
+  margin: 0 -4px 20px;
+  padding: 8px 3px;
+  text-align: center;
+  color: #8a2d3a;
+  font:
+    700 21px/1.1 Gaegu,
+    "Comic Sans MS",
+    cursive;
+  background-color: #fff9ef;
+  background-image:
+    repeating-linear-gradient(0deg, #e9a1a44d 0 10px, transparent 10px 20px),
+    repeating-linear-gradient(90deg, #e9a1a44d 0 10px, transparent 10px 20px);
+  border: 2px dashed #cf66706b;
+  border-radius: 7px;
+  transform: rotate(-2deg);
+}
+.sectioned-app.scrapbook-theme .brand {
+  color: #b23b49;
+  font:
+    700 53px/1 Gaegu,
+    "Comic Sans MS",
+    cursive;
+  letter-spacing: -2px;
+}
+.sectioned-app.scrapbook-theme .brand span {
+  color: #ca8a39;
+  font-size: 36px;
+}
+.sectioned-app.scrapbook-theme main {
+  background-color: #fffaf3f7;
+  background-image:
+    url("/backgrounds/kitchen-doodles.svg"),
+    radial-gradient(#b9957c55 0.7px, transparent 0.8px);
+}
+.sectioned-app.scrapbook-theme .page-heading h1 {
+  color: #a73e4b;
+  font:
+    700 clamp(34px, 3.4vw, 49px)/1.08 Gaegu,
+    "Comic Sans MS",
+    cursive;
+  letter-spacing: -1px;
+  text-shadow:
+    3px 0 #fffdf5,
+    -3px 0 #fffdf5,
+    0 3px #fffdf5,
+    0 -3px #fffdf5;
+}
+.sectioned-app.scrapbook-theme .page-heading p {
+  color: #7f6256;
+}
+.sectioned-app.scrapbook-theme .primary {
+  background: #b8424d;
+  border-color: #b8424d;
+  box-shadow: 0 3px 0 #8c2b3922;
+}
+.sectioned-app.scrapbook-theme .primary:hover:not(:disabled) {
+  background: #a33140;
+  border-color: #a33140;
+}
+.sectioned-app.scrapbook-theme .main-navigation a[aria-current="page"],
+.sectioned-app.scrapbook-theme .recipe-link.active {
+  color: #a53846;
+  background: #fbe3db;
+  border-color: #e7b4ab;
+}
+.sectioned-app.scrapbook-theme .main-navigation a:hover {
+  background: #fff0e8;
+}
+.sectioned-app.scrapbook-theme .appearance-toggle {
+  color: #a53846;
+  background: #fff0e5;
+  border-color: #e7b6a8;
+}
+.sectioned-app.scrapbook-theme .global-status {
+  background: #fff0db;
+  color: #886047;
+}
+.sectioned-app.scrapbook-theme .day-card h2 {
+  font:
+    700 28px/1.1 Gaegu,
+    "Comic Sans MS",
+    cursive;
+  color: #ac4552;
+}
+.sectioned-app.scrapbook-theme .shopping-panel h2 {
+  font:
+    700 36px/1.1 Gaegu,
+    "Comic Sans MS",
+    cursive;
+  color: #ac4552;
+}
+.sectioned-app.scrapbook-theme .grocery-sticky h3 {
+  font:
+    700 25px/1.05 Gaegu,
+    "Comic Sans MS",
+    cursive;
+  color: #694633;
+}
+.sectioned-app.scrapbook-theme .grocery-sticky {
+  --sticky: #f5df83;
+}
+.sectioned-app.scrapbook-theme .grocery-sticky.sticky-1 {
+  --sticky: #f4c6cb;
+}
+.sectioned-app.scrapbook-theme .grocery-sticky.sticky-2 {
+  --sticky: #cce2bd;
+}
+.sectioned-app.scrapbook-theme .grocery-sticky.sticky-3 {
+  --sticky: #f4d0a6;
+}
+.sectioned-app.scrapbook-theme .grocery-sticky::before {
+  background: #dd9c974d;
+}
+.sectioned-app.scrapbook-theme .sticky-empty {
+  color: #795f46;
+  font:
+    400 19px/1.15 Gaegu,
+    "Comic Sans MS",
+    cursive;
+}
+.sectioned-app.scrapbook-theme .shopping-panel .grocery-sticky li label {
+  color: #654c3a;
+}
+.sectioned-app.scrapbook-theme .week-notes {
+  font:
+    700 24px Gaegu,
+    "Comic Sans MS",
+    cursive;
+  color: #a3424e;
+}
+.sectioned-app.scrapbook-theme .week-notes textarea {
+  font:
+    400 23px/1.4 Gaegu,
+    "Comic Sans MS",
+    cursive;
+  color: #604337;
+}
+.sectioned-app.scrapbook-theme .bounded-editor {
+  background-color: #fffcf3;
+  border-color: #e8c8b4;
+  background-image: radial-gradient(#ba917660 0.7px, transparent 0.8px);
+}
+.sectioned-app.scrapbook-theme .notebook-paper .page-letterhead strong {
+  font:
+    700 35px/1.1 Gaegu,
+    "Comic Sans MS",
+    cursive;
+  color: #b24450;
+}
+.sectioned-app.scrapbook-theme
+  .bounded-editor
+  .notebook-paper
+  .loose-notes
+  textarea,
+.sectioned-app.scrapbook-theme .bounded-editor .template-writing textarea {
+  font:
+    400 25px/1.5 Gaegu,
+    "Comic Sans MS",
+    cursive;
+  color: #65473b;
+}
+.sectioned-app.scrapbook-theme .drawing-heading h3 {
+  font:
+    700 29px/1.1 Gaegu,
+    "Comic Sans MS",
+    cursive;
+  color: #b24450;
+}
+.sectioned-app.scrapbook-theme .sticker-hint {
+  font:
+    400 21px/1.2 Gaegu,
+    "Comic Sans MS",
+    cursive;
+  color: #a85b59;
+}
+.sectioned-app.scrapbook-theme .sticker-tools > button {
+  background: #fde5da;
+  color: #a23c49;
+  border-color: #eab4a3;
+}
+.sectioned-app.scrapbook-theme .sticker-picker {
+  background: #fff3e6;
+  border-color: #e6bb9e;
+}
+.sectioned-app.scrapbook-theme
+  .canvas-writing-tools
+  button[aria-pressed="true"],
+.sectioned-app.scrapbook-theme
+  .bounded-editor
+  .writing-toolbar
+  button[aria-pressed="true"] {
+  background: #b8424d;
+  border-color: #b8424d;
+}
+.sectioned-app.scrapbook-theme .saved-recipe-card {
+  border-top: 5px solid #e9b4a5;
+}
+.sectioned-app.scrapbook-theme .saved-recipe-card:nth-child(3n + 2) {
+  border-top-color: #e5bd64;
+}
+.sectioned-app.scrapbook-theme .saved-recipe-card:nth-child(3n) {
+  border-top-color: #a8c493;
+}
+.sectioned-app.scrapbook-theme .saved-recipe-card h3,
+.sectioned-app.scrapbook-theme .recipe-library-toolbar h2,
+.sectioned-app.scrapbook-theme .companion-context h2,
+.sectioned-app.scrapbook-theme .assistant h2 {
+  font-family: Gaegu, "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 30px;
+  color: #9f3c49;
+}
+.sectioned-app.scrapbook-theme .saved-recipe-symbol {
+  background: #fce8dc;
+  color: #b8424d;
+}
+.sectioned-app.scrapbook-theme .recipe-card-action {
+  color: #a53846;
+}
+@media (max-width: 650px) {
+  .scrapbook-theme::after {
+    inset: -3px;
+    border-radius: 15px;
+  }
+  .scrapbook-theme .sidebar::before {
+    max-width: 260px;
+    margin: 0 auto 15px;
+  }
+  .sectioned-app.scrapbook-theme .page-heading h1 {
+    font-size: 37px;
+  }
+  .sectioned-app.scrapbook-theme .bounded-editor .template-writing textarea {
+    font-size: 23px;
+  }
+}
+.recipe-category-tabs,
+.recipe-subcategory-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 15px 0;
+}
+.recipe-category-tabs button {
+  padding: 9px 13px;
+  font-size: 12px;
+  border-radius: 9px 9px 3px 3px;
+  border-bottom: 3px solid #d6dce6;
+}
+.recipe-category-tabs button span {
+  margin-left: 5px;
+  opacity: 0.65;
+  font-size: 10px;
+}
+.sectioned-app .recipe-category-tabs button[aria-pressed="true"],
+.sectioned-app .recipe-subcategory-tabs button[aria-pressed="true"] {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+.sectioned-app.scrapbook-theme .recipe-category-tabs button {
+  background: #fff3e6;
+  border-color: #e8c4ac;
+  color: #805245;
+}
+.sectioned-app.scrapbook-theme
+  .recipe-category-tabs
+  button[aria-pressed="true"],
+.sectioned-app.scrapbook-theme
+  .recipe-subcategory-tabs
+  button[aria-pressed="true"] {
+  background: #b8424d;
+  color: white;
+  border-color: #b8424d;
+}
+.recipe-subcategory-tabs {
+  align-items: center;
+  font-size: 12px;
+}
+.recipe-subcategory-tabs button {
+  padding: 6px 11px;
+  font-size: 12px;
+  border-radius: 20px;
+}
+.category-help,
+.recipe-filter-count {
+  color: #826b5e;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.recipe-filter-count {
+  margin: 20px 0 12px;
+}
+.sticky-writing-label {
+  display: block;
+  margin-top: 12px;
+}
+.sticky-writing-label > span {
+  font-size: 10px;
+  color: #795f46;
+}
+.sectioned-app .shopping-panel .grocery-sticky .sticky-writing-label textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 125px;
+  margin: 5px 0 0;
+  padding: 4px 0;
+  border: 0;
+  border-radius: 0;
+  border-bottom: 1px dashed #86745466;
+  background: transparent;
+  color: #563d2e;
+  resize: vertical;
+  font:
+    14px/1.7 "DM Sans",
+    sans-serif;
+  box-shadow: none;
+}
+.sectioned-app.scrapbook-theme
+  .shopping-panel
+  .grocery-sticky
+  .sticky-writing-label
+  textarea {
+  font:
+    400 23px/1.3 Gaegu,
+    "Comic Sans MS",
+    cursive;
+}
+.sectioned-app
+  .shopping-panel
+  .grocery-sticky
+  .sticky-writing-label
+  textarea::placeholder {
+  color: #846c56;
+  opacity: 0.85;
+}
+.sectioned-app
+  .shopping-panel
+  .grocery-sticky
+  .sticky-writing-label
+  textarea:focus {
+  outline: 2px dashed #a45a4a;
+  outline-offset: 4px;
+}
+.shopping-panel .grocery-sticky .sticky-empty {
+  display: none;
+}
