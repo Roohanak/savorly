@@ -652,23 +652,12 @@ export default function App() {
               )
               .map((r) => (
                 <div className="experiment-row" key={r.id}>
-                <button
-                  type="button"
-                  className={
-                    "recipe-link " + (r.id === selected ? "active" : "")
-                  }
-                  onClick={() => choose(r.id)}
-                >
-                  <span className="recipe-icon">♧</span>
-                  <span>
-                    {r.title || "Untitled experiment"}
-                    <small>
-                      {pagesFor(r).length} notebook pages · {r.attempts.length}{" "}
-                      attempts
-                    </small>
-                  </span>
-                </button>
-                <button type="button" className="sidebar-delete danger" aria-label={`Delete experiment ${r.title || "Untitled experiment"}`} onClick={() => deleteExperiment(r.id)}>Delete</button>
+                  <button type="button" className={"recipe-link " + (r.id === selected ? "active" : "")} onClick={() => choose(r.id)} title={`${r.title || "Untitled experiment"} · ${pagesFor(r).length} pages · ${r.attempts.length} attempts`}>
+                    <span className="experiment-name">{r.title || "Untitled experiment"}</span>
+                  </button>
+                  <button type="button" className="sidebar-delete danger" title="Delete experiment" aria-label={`Delete experiment ${r.title || "Untitled experiment"}`} onClick={() => deleteExperiment(r.id)}>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 6h18M9 6V4h6v2M5 6l1 14h12l1-14M10 10v6M14 10v6"/></svg>
+                  </button>
                 </div>
               ))}
             {!recipes.some((r) =>
