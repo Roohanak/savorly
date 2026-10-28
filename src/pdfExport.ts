@@ -34,11 +34,12 @@ class Paper {
   pageColor = "#fffdf8";
   accent = "#a73e4b";
   wallpaper: HTMLImageElement | null = null;
-  async decorate(page: NotebookPage) {
+  async decorate(page: Pick<NotebookPage, "template" | "color">, appearance?: string) {
     const design = templateDesign(page.template);
-    this.pageColor = page.color ?? design.color;
-    this.accent = design.accent;
-    this.wallpaper = page.template.startsWith("toddler")
+    const toddler = appearance === "toddler" || page.template.startsWith("toddler");
+    this.pageColor = toddler ? "#f8f1fc" : page.color ?? design.color;
+    this.accent = toddler ? "#916092" : design.accent;
+    this.wallpaper = toddler
       ? await loadImage("/backgrounds/toddler-daydreams.svg") : null;
     this.clear();
   }
@@ -290,9 +291,10 @@ async function writer() {
   const { jsPDF } = await import("jspdf");
   return new Paper(new jsPDF({ unit: "mm", format: "a4", compress: true }));
 }
-export async function exportRecipe(recipe: Recipe) {
+export async function exportRecipe(recipe: Recipe, appearance?: string) {
   const p = await writer();
-  p.text(recipe.title || "Untitled recipe", 54, "#a73e4b", true);
+  if (appearance === "toddler") await p.decorate({ template: "toddler" }, appearance);
+  p.text(recipe.title || "Untitled recipe", 54, p.accent, true);
   p.text([recipe.category, recipe.subcategory].filter(Boolean).join(" / "), 24);
   p.text(`Servings: ${recipe.servings}`, 25);
   p.heading("Ingredients");
@@ -321,6 +323,7 @@ export async function exportNotebook(
   week = "",
   recipes: Recipe[] = [recipe],
   selectedPage?: NotebookPage,
+  appearance?: string,
 ) {
   const p = await writer();
   const pages = selectedPage ? [selectedPage] : pagesFor(recipe);
@@ -330,17 +333,18 @@ export async function exportNotebook(
   }
   for (const [i, page] of pages.entries()) {
     if (i) p.next();
-    await p.decorate(page);
+    await p.decorate(page, appearance);
     p.text(recipe.title || "Kitchen notebook", 25, "#9b6d63");
     p.text(page.title || `Page ${i + 1}`, 50, p.accent, true);
-    p.text(templateDesign(page.template).format, 25, p.accent);
+    const toddler = appearance === "toddler" || page.template.startsWith("toddler");
+    p.text((toddler && !page.template.startsWith("toddler") ? "Little days · " : "") + templateDesign(page.template).format, 25, p.accent);
     const design = templateDesign(page.template);
     for (const field of design.fields) {
       const value = page.fields?.[field.id];
       if (page.template !== "weekly" || value?.trim()) p.field(field.label, value ?? "");
     }
     if (page.text.trim()) {
-      p.heading(page.template.startsWith("toddler") ? "Little notes & happy moments" : "Notebook notes");
+      p.heading(toddler ? "Little notes & happy moments" : "Notebook notes");
       p.text(page.text);
     }
     if (page.template === "weekly") {
@@ -373,7 +377,7 @@ export async function exportNotebook(
       page.photoIds?.length ||
       page.stickers?.length
     ) {
-      p.heading(page.template.startsWith("toddler") ? "Little doodles & keepsakes" : "Sketches, photos & stickers");
+      p.heading(toddler ? "Little doodles & keepsakes" : "Sketches, photos & stickers");
       await p.sketch(page);
     }
     if (page.strokes.some((s) => s.region !== "pad")) {

@@ -9,6 +9,7 @@ export default function PdfExportButton({
   weeks,
   week,
   recipes,
+  appearance,
 }: {
   recipe: Recipe;
   notebook?: boolean;
@@ -16,6 +17,7 @@ export default function PdfExportButton({
   weeks?: WeekPlan[];
   week?: string;
   recipes?: Recipe[];
+  appearance?: string;
 }) {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
@@ -31,8 +33,8 @@ export default function PdfExportButton({
           try {
             const pdf = await import("./pdfExport");
             if (notebook || page)
-              await pdf.exportNotebook(recipe, weeks, week, recipes, page);
-            else await pdf.exportRecipe(recipe);
+              await pdf.exportNotebook(recipe, weeks, week, recipes, page, appearance);
+            else await pdf.exportRecipe(recipe, appearance);
             setMessage("PDF downloaded. Your original stays editable.");
           } catch (e) {
             setMessage(
