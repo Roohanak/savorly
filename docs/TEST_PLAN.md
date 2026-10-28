@@ -63,3 +63,10 @@ These items are proposed ownership for the invited teammate, not a claim that th
 
 - [ ] Nutrition agrees with the displayed batch: enter a recipe that makes five, check that five is shown, switch to another recipe and confirm its yield loads. Scale all quantities and confirm per-serving estimates stay broadly consistent. Missing amounts must not produce a serving-size assumption or invented calories.
 - [ ] Companion answers the typed cooking question, labels suggested quantities as untested, and leaves the saved recipe unchanged. The nutrition missing-details link should prefill the chosen batch size. Numeric nutrition belongs to the recipe panel.
+
+## Workspace isolation
+
+- [ ] Create a unique toddler journal and recipe, add photos/ink/stickers and a planner entry; switch to Plain/Scrapbook and confirm they do not appear there. Reload both areas and verify content remains.
+- [ ] Create cooking entries; confirm Plain/Scrapbook share them and Toddler cannot display them, including via stale direct URLs. Test separate deleted items and recovery downloads.
+- [ ] Test migration on synthetic mixed old notebooks. Preserve cooking notes/ingredients, toddler fields, all photos and drawings; verify the original combined snapshot can be exported. Do not run destructive tests against the owner's only journal.
+- [ ] Backups identify their workspace and cross-workspace replacement is rejected. For Supabase, apply the provided schema migration in a test project and verify account-plus-workspace isolation before deployment.

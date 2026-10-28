@@ -34,11 +34,12 @@ export default function JournalWorkspace({
   getRecipe,
 }: Props) {
   const pages = pagesFor(recipe);
+  const selectionKey = "savorly-last-page:" + (appearance === "toddler" ? "toddler:" : "cooking:") + recipe.id;
   const [selected, setSelected] = useState(() => {
     if (initialPageId) return initialPageId;
     try {
       return (
-        localStorage.getItem("savorly-last-page:" + recipe.id) ||
+        localStorage.getItem(selectionKey) ||
         pages[0]?.id ||
         ""
       );
@@ -50,12 +51,12 @@ export default function JournalWorkspace({
   useEffect(() => {
     if (page) {
       try {
-        localStorage.setItem("savorly-last-page:" + recipe.id, page.id);
+        localStorage.setItem(selectionKey, page.id);
       } catch {
         /* Selection memory is optional when storage is unavailable. */
       }
     }
-  }, [recipe.id, page]);
+  }, [recipe.id, page, selectionKey]);
   const [notice, setNotice] = useState("");
   const history = useRef<Record<string, { past: NotebookPage[]; future: NotebookPage[] }>>({});
   useEffect(() => {
@@ -98,7 +99,7 @@ export default function JournalWorkspace({
       );
       return;
     }
-    const next = newNotebookPage();
+    const next = newNotebookPage(appearance === "toddler" ? "toddler-sketch" : "blank");
     onChange({ journalPages: [...pages, next] });
     setSelected(next.id);
   }

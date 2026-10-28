@@ -78,10 +78,10 @@ export function validatePlans(value: unknown): asserts value is WeekPlan[] {
   )
     throw new Error("Invalid planner backup.");
 }
-export function loadPlans(): WeekPlan[] {
+export function loadPlans(storageKey = "savorly-planner-v1"): WeekPlan[] {
   try {
     const plans = JSON.parse(
-      localStorage.getItem("savorly-planner-v1") ?? "[]",
+      localStorage.getItem(storageKey) ?? "[]",
     );
     validatePlans(plans);
     return plans;

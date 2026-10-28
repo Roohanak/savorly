@@ -71,7 +71,7 @@ export async function saveRecovery(backup: JournalBackup) {
   const db = await openDatabase();
   return new Promise<void>((resolve, reject) => {
     const transaction = db.transaction("recovery", "readwrite");
-    transaction.objectStore("recovery").put(backup, "before-replace");
+    transaction.objectStore("recovery").put(backup, "before-replace:" + (backup.workspace ?? "cooking"));
     transaction.oncomplete = () => resolve();
     transaction.onerror = transaction.onabort = () =>
       reject(
@@ -82,16 +82,19 @@ export async function saveRecovery(backup: JournalBackup) {
   });
 }
 
-export async function getRecovery(): Promise<JournalBackup | undefined> {
+export async function getRecovery(workspace = "cooking"): Promise<JournalBackup | undefined> {
   const db = await openDatabase();
-  return new Promise((resolve, reject) => {
-    const request = db
-      .transaction("recovery")
-      .objectStore("recovery")
-      .get("before-replace");
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () =>
-      reject(new Error("Could not read the recovery copy."));
+  return new Promise((resolve,reject)=>{
+    const store=db.transaction("recovery").objectStore("recovery");
+    const request=store.get("before-replace:"+workspace);
+    request.onsuccess=()=>{
+      if (!request.result && workspace === "cooking") {
+        const legacy=store.get("before-replace");
+        legacy.onsuccess=()=>resolve(legacy.result);
+        legacy.onerror=()=>reject(new Error("Could not read the recovery copy."));
+      } else resolve(request.result);
+    };
+    request.onerror=()=>reject(new Error("Could not read the recovery copy."));
   });
 }
 

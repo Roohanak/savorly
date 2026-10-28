@@ -1,7 +1,9 @@
 -- Run once in a new Supabase project's SQL Editor.
 -- Each authenticated account can access only its own journal.
 create table public.journals (
-  user_id uuid primary key references auth.users(id) on delete cascade,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  workspace text not null default 'cooking' check (workspace in ('cooking', 'toddler')),
+  primary key (user_id, workspace),
   payload jsonb not null,
   revision bigint not null default 1 check (revision > 0),
   constraint journal_size_limit check (octet_length(payload::text) <= 16777216)

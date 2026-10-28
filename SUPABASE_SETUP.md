@@ -1,3 +1,7 @@
+## Existing project update: separate workspaces
+
+Before using this version with an existing configured project, run `supabase/workspaces-migration.sql` in the SQL Editor. It keeps existing rows as cooking and changes the primary key to `(user_id, workspace)`. New projects should use the current `supabase/setup.sql`. Do not rerun the new-project CREATE TABLE script over an existing table. Cooking and toddler payloads are now saved and loaded independently. Live migration/sync still requires testing with your project.
+
 # Connect your computer and iPad
 
 The app is ready for Supabase, but cloud sync is not active until you create and configure a project. You do not need this setup for local photos or recipes.

@@ -1,3 +1,5 @@
+import { migrateWorkspaces, workspaceKeys } from "./workspaces";
+import type { Workspace } from "./workspaces";
 import { scaleIngredients } from "./recipeScaling";
 import JournalLibrary from "./JournalLibrary";
 import NutritionPanel from "./NutritionPanel";
@@ -15,7 +17,7 @@ import { PlannerContext } from "./plannerContext";
 import type { WeekPlan } from "./planner";
 import { loadPlans, monday } from "./planner";
 import { newId } from "./id.ts";
-import { useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { JournalBackup, Recipe } from "./model";
 import { parseBackup, validateRecipes } from "./model";
 import PhotoGallery from "./PhotoGallery";
@@ -127,39 +129,43 @@ const sample: Recipe = {
     },
   ],
 };
-const storageKey = "savorly-recipes-v1";
-function load(): Recipe[] {
+function load(storageKey: string, workspace: Workspace): Recipe[] {
   try {
     const value = localStorage.getItem(storageKey);
-    if (!value) return [sample];
+    if (!value) return workspace === "cooking" ? [sample] : [];
     const parsed: unknown = JSON.parse(value);
     validateRecipes(parsed);
     return parsed;
   } catch {
-    return [sample];
+    return workspace === "cooking" ? [sample] : [];
   }
 }
 export default function App() {
+  const [migrationError] = useState(() => {try {return migrateWorkspaces(localStorage);} catch {return "Workspace storage is unavailable.";} });
   const [appearance, setAppearance] = useState(() => {
-    try {
-      const saved = localStorage.getItem("savorly-appearance");
-      return saved === "plain" || saved === "toddler" ? saved : "scrapbook";
-    } catch { return "scrapbook"; }
+    try {const saved=localStorage.getItem("savorly-appearance");return saved === "plain" || saved === "toddler" ? saved : "scrapbook";} catch {return "scrapbook";}
   });
-  const scrapbook = appearance !== "plain";
+  const workspace: Workspace = appearance === "toddler" ? "toddler" : "cooking";
   function changeAppearance(next: string) {
+    if ((next === "toddler") !== (appearance === "toddler")) window.location.hash = "#/journal";
     setAppearance(next);
-    try { localStorage.setItem("savorly-appearance", next); } catch { /* Optional preference. */ }
+    try {localStorage.setItem("savorly-appearance",next);} catch { /* Optional preference. */ }
   }
-  const [records, setRecipeState] = useState<Recipe[]>(load);
+  return <>{migrationError && <p role="alert">{migrationError}</p>}<WorkspaceApp key={workspace} workspace={workspace} appearance={appearance} changeAppearance={changeAppearance}/></>;
+}
+function WorkspaceApp({workspace,appearance,changeAppearance}:{workspace:Workspace;appearance:string;changeAppearance:(next:string)=>void}) {
+  const keys=workspaceKeys(workspace);
+  const storageKey=keys.recipes, plannerStorageKey=keys.planner;
+  const scrapbook = appearance !== "plain";
+  const [records, setRecipeState] = useState<Recipe[]>(()=>load(storageKey,workspace));
   const recipes = records.filter((r) => !r.deletedAt);
   const trash = records.filter((r) => r.deletedAt);
   const recipesRef = useRef(records);
-  const [plans, setPlansState] = useState<WeekPlan[]>(loadPlans);
+  const [plans, setPlansState] = useState<WeekPlan[]>(()=>loadPlans(plannerStorageKey));
   const plansRef = useRef(plans);
   const [plannerWeek, setPlannerWeekState] = useState(() => {
     try {
-      const saved = localStorage.getItem("savorly-planner-week");
+      const saved = localStorage.getItem(keys.week);
       return saved && /^\d{4}-\d{2}-\d{2}$/.test(saved) ? saved : monday();
     } catch {
       return monday();
@@ -168,7 +174,7 @@ export default function App() {
   function setPlannerWeek(week: string) {
     setPlannerWeekState(week);
     try {
-      localStorage.setItem("savorly-planner-week", week);
+      localStorage.setItem(keys.week, week);
     } catch {
       /* Optional view preference. */
     }
@@ -177,7 +183,7 @@ export default function App() {
     plansRef.current = next;
     setPlansState(next);
     try {
-      localStorage.setItem("savorly-planner-v1", JSON.stringify(next));
+      localStorage.setItem(plannerStorageKey, JSON.stringify(next));
       setStatus("Planner saved");
     } catch {
       setStatus(
@@ -222,6 +228,7 @@ export default function App() {
   }>({ action: "", recipeId: "" });
   const [aiError, setAiError] = useState("");
   const aiRequest = useRef<AbortController | null>(null);
+  useEffect(()=>()=>aiRequest.current?.abort(),[]);
 
   const [busy, setBusy] = useState(false);
   const [cook, setCook] = useState(false);
@@ -275,7 +282,7 @@ export default function App() {
       steps: "",
       notes: "",
       attempts: [],
-      journalPages: [newNotebookPage()],
+      journalPages: [newNotebookPage(workspace === "toddler" ? "toddler" : "blank")],
     };
     setRecipes([...recipesRef.current, r]);
     choose(r.id);
@@ -301,14 +308,26 @@ export default function App() {
   function saveNow() {
     try {
       localStorage.setItem(storageKey, JSON.stringify(recipesRef.current));
-      localStorage.setItem("savorly-planner-v1", JSON.stringify(plansRef.current));
+      localStorage.setItem(plannerStorageKey, JSON.stringify(plansRef.current));
       setStatus("Saved now · " + new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}) + " · Autosave is on");
     } catch { setStatus("Could not save locally. Download a backup to protect your changes."); }
+  }
+  async function workspaceBackup() { return {...await makeBackup(recipesRef.current,plansRef.current),workspace}; }
+  async function exportBeforeSplit() {
+    try {
+      const raw = localStorage.getItem("savorly-before-workspace-split-v1");
+      if (!raw) {setStatus("No pre-separation copy is available.");return;}
+      const copy = JSON.parse(raw);
+      const original = JSON.parse(copy.recipes ?? "[]");
+      validateRecipes(original);
+      downloadBackup(await makeBackup(original,JSON.parse(copy.planner ?? "[]")),"savorly-before-workspace-split.json");
+      setStatus("Downloaded the original notebook copy from before workspace separation.");
+    } catch {setStatus("Could not export the pre-separation copy. Your current work is unchanged.");}
   }
   async function download() {
     setJournalBusy(true);
     try {
-      downloadBackup(await makeBackup(recipesRef.current, plansRef.current));
+      downloadBackup(await workspaceBackup(), `savorly-${workspace}-backup.json`);
       setStatus("Backup exported with recipes and photos.");
     } catch (error) {
       setStatus(
@@ -319,9 +338,10 @@ export default function App() {
     }
   }
   async function replaceJournal(backup: JournalBackup) {
+    if (backup.workspace && backup.workspace !== workspace) throw new Error(`This backup belongs to the ${backup.workspace} workspace. Switch to that workspace before restoring it.`);
     const before = recipesRef.current;
     const beforePlans = plansRef.current;
-    await saveRecovery(await makeBackup(before, beforePlans));
+    await saveRecovery({...await makeBackup(before, beforePlans),workspace});
     // Photo IDs are remapped to keep the recovery copy intact even when versions share IDs.
     const mapping = new Map(backup.photos.map((photo) => [photo.id, newId()]));
     await putPhotos(
@@ -345,19 +365,19 @@ export default function App() {
       );
     // Write metadata before switching the visible journal so storage failures remain recoverable.
     const oldRecipes = localStorage.getItem(storageKey),
-      oldPlans = localStorage.getItem("savorly-planner-v1");
+      oldPlans = localStorage.getItem(plannerStorageKey);
     try {
       localStorage.setItem(storageKey, JSON.stringify(restored));
       localStorage.setItem(
-        "savorly-planner-v1",
+        plannerStorageKey,
         JSON.stringify(backup.planner ?? []),
       );
     } catch (error) {
       try {
         if (oldRecipes === null) localStorage.removeItem(storageKey);
         else localStorage.setItem(storageKey, oldRecipes);
-        if (oldPlans === null) localStorage.removeItem("savorly-planner-v1");
-        else localStorage.setItem("savorly-planner-v1", oldPlans);
+        if (oldPlans === null) localStorage.removeItem(plannerStorageKey);
+        else localStorage.setItem(plannerStorageKey, oldPlans);
       } catch {
         /* Recovery snapshot remains available. */
       }
@@ -394,7 +414,7 @@ export default function App() {
   }
   async function exportRecovery() {
     try {
-      const backup = await getRecovery();
+      const backup = await getRecovery(workspace);
       if (!backup)
         throw new Error(
           "No recovery copy yet. One is saved before restoring or loading a cloud journal.",
@@ -622,7 +642,7 @@ export default function App() {
           <a className="brand" href="#/journal">
             savorly<span>✳</span>
           </a>
-          <p className="eyebrow">YOUR PERSONAL RECIPE LAB</p>
+          <p className="eyebrow">{workspace === "toddler" ? "YOUR LITTLE DAYS JOURNAL" : "YOUR PERSONAL RECIPE LAB"}</p>
           <button className="primary new-button" onClick={create}>
             ＋ New journal
           </button>
@@ -652,10 +672,10 @@ export default function App() {
         </aside>
         <main className={"page-" + page}>
           <header className="topbar">
-            <span>My kitchen / {heading[2]}</span>
+            <span>{workspace === "toddler" ? "Little days" : "My kitchen"} / {heading[2]}</span>
             <div className="context-actions">
               <label className="theme-picker">
-                <span>Theme</span>
+                <span>Workspace & look</span>
                 <select aria-label="App theme" value={appearance} onChange={(e) => changeAppearance(e.target.value)}>
                   <option value="plain">Plain paper</option>
                   <option value="scrapbook">✿ Scrapbook</option>
@@ -752,12 +772,8 @@ export default function App() {
                 >
                   Export recovery copy
                 </button>
-                <CloudSync
-                  getBackup={() =>
-                    makeBackup(recipesRef.current, plansRef.current)
-                  }
-                  replaceJournal={replaceJournal}
-                />
+<button type="button" onClick={()=>void exportBeforeSplit()}>Export original pre-separation copy</button>
+                <CloudSync workspace={workspace} getBackup={workspaceBackup} replaceJournal={replaceJournal} />
               </section>
               <section className="card settings-card">
                 <h2>Recently deleted</h2>

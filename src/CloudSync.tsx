@@ -9,11 +9,12 @@ const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 const supabase = url && key ? createClient(url, key) : null;
 
 type Props = {
+  workspace: "cooking" | "toddler";
   getBackup: () => Promise<JournalBackup>;
   replaceJournal: (backup: JournalBackup) => Promise<void>;
 };
 
-export default function CloudSync({ getBackup, replaceJournal }: Props) {
+export default function CloudSync({ getBackup, replaceJournal, workspace }: Props) {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
@@ -57,6 +58,7 @@ export default function CloudSync({ getBackup, replaceJournal }: Props) {
       .from("journals")
       .select("payload,revision")
       .eq("user_id", active.user.id)
+      .eq("workspace", workspace)
       .maybeSingle();
     if (error) throw error;
     if (!data) {
@@ -93,7 +95,7 @@ export default function CloudSync({ getBackup, replaceJournal }: Props) {
       // INSERT (never upsert) prevents overwriting an existing journal on first connection.
       const { error } = await supabase
         .from("journals")
-        .insert({ user_id: active.user.id, payload, revision: 1 });
+        .insert({ user_id: active.user.id, workspace, payload, revision: 1 });
       if (error?.code === "23505")
         throw new Error(
           "This account already has a cloud journal. Export this device as a backup, then load the cloud version before saving changes.",
@@ -105,6 +107,7 @@ export default function CloudSync({ getBackup, replaceJournal }: Props) {
         .from("journals")
         .update({ payload, revision: expected + 1 })
         .eq("user_id", active.user.id)
+      .eq("workspace", workspace)
         .eq("revision", expected)
         .select("revision");
       if (error) throw error;

@@ -29,6 +29,7 @@ export type Recipe = {
 
 export type Photo = { id: string; name: string; data: string };
 export type JournalBackup = {
+  workspace?: "cooking" | "toddler";
   version: 2;
   recipes: Recipe[];
   photos: Photo[];
@@ -195,6 +196,7 @@ export function parseBackup(value: unknown): JournalBackup {
   }
   if (!record(value) || value.version !== 2 || !Array.isArray(value.photos))
     throw new Error("Unsupported journal backup.");
+  if (value.workspace !== undefined && value.workspace !== "cooking" && value.workspace !== "toddler") throw new Error("Invalid backup workspace.");
   validateRecipes(value.recipes);
   const photos: Photo[] = [];
   for (const p of value.photos) {
@@ -218,6 +220,7 @@ export function parseBackup(value: unknown): JournalBackup {
   if (value.planner !== undefined) validatePlans(value.planner);
   return {
     version: 2,
+    ...(value.workspace !== undefined ? {workspace:value.workspace} : {}),
     recipes: value.recipes,
     photos,
     ...(value.planner !== undefined ? { planner: value.planner } : {}),

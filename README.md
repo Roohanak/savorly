@@ -143,3 +143,11 @@ Recipes have Estimate calories & macros. It sends only the recipe title, base se
 Recipe makes is the yield for the entered ingredient amounts. Scale batch to previews a different batch size; Nutrition uses exactly that batch size and the same scaled ingredient text. Scaling a whole batch changes total food, not normally nutrition per portion. To divide the unchanged original food into five portions, set Recipe makes to five. Nutrition needs ingredient amounts as well as servings; it does not invent missing quantities or report assumptions when no estimate is possible.
 
 AI Companion has Ask a cooking question for technique, swaps and suggested recipe amounts. Suggestions are untested and do not automatically change the saved recipe. Nutrition has a link that prefills a question about missing amounts for the selected batch size. Numeric calories/macros stay in the recipe Nutrition panel to avoid competing estimates. Question context excludes separate notebook pages; it uses recipe ingredients, method, notes and attempts.
+
+## Separate toddler and cooking workspaces
+
+Plain paper and Scrapbook share the cooking journals/recipes/planner. Toddler planner opens a separate workspace with its own journals, recipes, weeks, trash and recovery backups. Switching areas returns to the journal library and clears in-flight AI/editor state. New toddler journals start with a toddler planner page.
+
+A one-time migration separates existing toddler-template pages from mixed legacy notebooks. Cooking fields/notes/attempts stay in cooking; toddler pages move to the toddler area. Existing generic pages cannot reliably be classified by theme history and stay with cooking. Mixed cooking copies are labeled “(cooking pages)”. No media are deleted. Settings → Export original pre-separation copy downloads the original combined snapshot if needed.
+
+Backups identify their workspace and cannot silently replace another workspace. Cloud rows are scoped by account and workspace. Existing Supabase projects must run `supabase/workspaces-migration.sql` before using the updated sync controls; new projects use the updated setup.sql. This schema change is prepared locally, not applied to a live project or live-tested.
