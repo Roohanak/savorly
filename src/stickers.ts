@@ -9,6 +9,22 @@ export const stickerKinds = [
   "sparkle",
   "coffee",
   "bread",
+  "croissant",
+  "cupcake",
+  "cake",
+  "cookie",
+  "pie",
+  "pancakes",
+  "cherries",
+  "lemon",
+  "carrot",
+  "avocado",
+  "teapot",
+  "jar",
+  "whisk",
+  "bow",
+  "bee",
+  "butterfly",
 ] as const;
 export type StickerKind = (typeof stickerKinds)[number];
 export type Sticker = {
@@ -39,7 +55,28 @@ export function validStickers(value: unknown): value is Sticker[] | undefined {
           s.y >= 0 &&
           s.x + s.size <= 100.001 &&
           s.y + s.size <= 100.001 &&
-          Math.abs(s.rotation) <= 30,
+          Math.abs(s.rotation) <= 180,
       ))
   );
+}
+
+export function resizeSticker(
+  sticker: Sticker,
+  dx: number,
+  dy: number,
+  width: number,
+  height: number,
+): Sticker {
+  if (width <= 0 || height <= 0) return sticker;
+  const delta =
+    (100 * (dx * width + dy * height)) / (width * width + height * height);
+  const size = Math.max(
+    5,
+    Math.min(30, 100 - sticker.x, 100 - sticker.y, sticker.size + delta),
+  );
+  return { ...sticker, size };
+}
+
+export function rotateSticker(start: number, deltaRadians: number) {
+  return ((start + (deltaRadians * 180) / Math.PI + 540) % 360) - 180;
 }

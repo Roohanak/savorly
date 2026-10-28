@@ -126,6 +126,198 @@ export default function StickerArt({ kind }: { kind: StickerKind }) {
             <path d="m18 20 3-7m61 64 5 5" stroke="#9ea97b" />
           </>
         )}
+
+        {kind === "croissant" && (
+          <>
+            <path
+              d="M14 63Q3 27 34 27l16 8 16-8q31 0 20 36L72 79 61 60H39L28 79Z"
+              fill="#e5b878"
+            />
+            <path d="m34 27 5 33m27-33-5 33M16 46l17 4m51-4-17 4M40 34l3 15m16-15-3 15" />
+          </>
+        )}
+        {kind === "cupcake" && (
+          <>
+            <path d="m24 53 8 34h36l8-34" fill="#e8afbd" />
+            <path
+              d="M19 52q-5-15 12-20-1-14 17-15 15-3 21 14 18 4 13 21-15 9-31 0-17 9-32 0Z"
+              fill="#fff0d5"
+            />
+            <path d="m36 61 4 20m12-20v20m14-20-4 20" />
+            <circle cx="50" cy="14" r="7" fill="#bd5861" />
+          </>
+        )}
+        {kind === "cake" && (
+          <>
+            <path d="M20 42h60v42H20Z" fill="#f0c3b3" />
+            <path
+              d="M18 43q6-18 32-18t32 18v13q-9 10-16-2-9 12-16 0-8 12-15 0-8 10-17 0Z"
+              fill="#fff1d5"
+            />
+            <path d="M17 85h66M24 70h52M50 25V12" />
+            <path d="M50 3q-9 9 0 9 9 0 0-9Z" fill="#e3b25e" />
+          </>
+        )}
+        {kind === "cookie" && (
+          <>
+            <path
+              d="M80 41q-23-1-21-24C21 1-3 53 21 79s75 6 68-27q-9 0-9-11Z"
+              fill="#dfb782"
+            />
+            <path
+              d="m29 30 4 5m12 16 3-5m-23 14 6 3m25 11 4-5m17-7 3 4"
+              stroke="#825a40"
+              strokeWidth="5"
+            />
+            <circle cx="45" cy="28" r="2" fill="#825a40" />
+          </>
+        )}
+        {kind === "pie" && (
+          <>
+            <path d="m14 48 10 34h52l10-34Z" fill="#d2a06d" />
+            <ellipse cx="50" cy="46" rx="38" ry="17" fill="#bd6d64" />
+            <path
+              d="m21 39 52 18m-38-25 47 16M23 55l45-22m-29 27 43-19"
+              stroke="#f0cb98"
+              strokeWidth="5"
+            />
+            <path
+              d="M17 45q3-13 11-8 6-11 14-5 9-9 17-1 11-5 16 5 11-2 11 11"
+              stroke="#dfb67c"
+              strokeWidth="5"
+            />
+          </>
+        )}
+        {kind === "pancakes" && (
+          <>
+            <ellipse cx="50" cy="80" rx="41" ry="10" fill="#f2e8d5" />
+            <path d="M18 47v27c2 17 64 17 66 0V47" fill="#deb883" />
+            <path d="M18 59c0 14 66 14 66 0M18 70c0 14 66 14 66 0" />
+            <ellipse cx="51" cy="45" rx="33" ry="13" fill="#e7c28c" />
+            <path
+              d="M23 42q24-17 52 0v15q-9 12-14-3-8 15-15-1-10 4-23-1Z"
+              fill="#b9814e"
+            />
+            <path d="m40 36 19-4 9 8-19 5Z" fill="#f1dc87" />
+          </>
+        )}
+        {kind === "cherries" && (
+          <>
+            <circle cx="28" cy="68" r="18" fill="#c76c77" />
+            <circle cx="72" cy="68" r="18" fill="#d1838a" />
+            <path
+              d="M28 50Q38 10 63 12q-2 26 9 38M58 16q-25-21-29 0 12 12 29 0Z"
+              fill="#a6b78b"
+            />
+            <path d="m20 63 4-5m40 5 4-5" stroke="#fff4e2" strokeWidth="4" />
+          </>
+        )}
+        {kind === "lemon" && (
+          <>
+            <path
+              d="M14 49q8-33 39-28 29-2 34 30l-5 3q-8 31-38 26-29 2-32-27Z"
+              fill="#ead47a"
+            />
+            <path d="M57 21q3-20 25-16-1 20-25 16Z" fill="#a1b48a" />
+            <path d="M25 44q5-12 16-13m24 35 2-2m-39-7 1-2" />
+          </>
+        )}
+        {kind === "carrot" && (
+          <>
+            <path d="M27 30c7-13 24-15 31-3L27 91q-5 4-6-2Z" fill="#e3ac72" />
+            <path d="m40 24-4-18 12 13 9-15 1 17 19-9-15 18" fill="#a2b887" />
+            <path d="m29 45 10 4m-13 9 8 4m-10 8 6 2" />
+          </>
+        )}
+        {kind === "avocado" && (
+          <>
+            <path
+              d="M49 10c-13 0-17 23-31 40-17 33 7 43 31 43s48-10 31-43C65 33 62 10 49 10Z"
+              fill="#a7b789"
+            />
+            <path
+              d="M49 20C38 21 36 40 25 55 10 83 33 86 49 86s40-3 24-31C62 40 61 21 49 20Z"
+              fill="#e5e4b2"
+            />
+            <ellipse cx="49" cy="64" rx="17" ry="19" fill="#b38a6a" />
+          </>
+        )}
+        {kind === "teapot" && (
+          <>
+            <path d="M27 42c-16 35 1 43 23 43s39-8 23-43Z" fill="#d5b9c9" />
+            <path d="M30 43h40M35 34q15-15 30 0M50 28V18m-4-1h8M28 50 8 35l7 30 13 7m43-27q30-15 24 17-3 15-20 14" />
+            <path
+              d="M44 63c-9-7-15 7 6 17 21-10 15-24 6-17l-6 5Z"
+              fill="#f4ddd1"
+            />
+          </>
+        )}
+        {kind === "jar" && (
+          <>
+            <rect x="23" y="26" width="54" height="62" rx="9" fill="#f1d9b5" />
+            <path d="M27 16h46v13H27Z" fill="#c67e86" />
+            <path
+              d="m31 17 5 11m7-11 5 11m7-11 5 11m7-11 5 11"
+              stroke="#fff5df"
+            />
+            <rect x="29" y="44" width="42" height="29" rx="3" fill="#fff5df" />
+            <path d="M50 65c-17-10-13-20 0-11 13-9 17 1 0 11Z" fill="#c67e86" />
+          </>
+        )}
+        {kind === "whisk" && (
+          <>
+            <path d="m35 62-23 22q-6 9 3 12l25-25Z" fill="#cfa584" />
+            <path d="M36 65c-35-35 34-73 50-49S73 86 36 65Zm0 0c-4-23 29-65 45-51M36 65c27 5 59-32 48-47M36 65 83 16" />
+          </>
+        )}
+        {kind === "bow" && (
+          <>
+            <path
+              d="M43 43C0 5 4 63 38 59L24 87l22-10 7 13 8-34c37 16 43-41 4-14Z"
+              fill="#dfa4b2"
+            />
+            <ellipse cx="52" cy="49" rx="12" ry="11" fill="#efc5ca" />
+            <path d="m19 38 21 10m25 0 17-11M45 61l-8 15m22-16-1 15" />
+          </>
+        )}
+        {kind === "bee" && (
+          <>
+            <ellipse
+              cx="39"
+              cy="30"
+              rx="16"
+              ry="20"
+              transform="rotate(-30 39 30)"
+              fill="#e6edf0"
+            />
+            <ellipse
+              cx="65"
+              cy="30"
+              rx="16"
+              ry="20"
+              transform="rotate(30 65 30)"
+              fill="#e6edf0"
+            />
+            <ellipse cx="51" cy="60" rx="31" ry="23" fill="#e5ca7a" />
+            <path d="M39 39v43m20-43v43" strokeWidth="7" />
+            <circle cx="76" cy="58" r="2" fill="#45483b" />
+            <path d="m20 64-9 4m60-4 4 3" />
+          </>
+        )}
+        {kind === "butterfly" && (
+          <>
+            <path
+              d="M46 49C-7-16-6 67 31 61 2 91 42 104 48 64 54 104 94 91 65 61 102 67 101-16 51 49Z"
+              fill="#c6bad5"
+            />
+            <path d="M49 46v32m-2-32-8-11m12 11 9-11" />
+            <path
+              d="M23 34q-10 20 11 18m40-18q10 20-11 18"
+              stroke="#f7eadb"
+              strokeWidth="5"
+            />
+          </>
+        )}
       </g>
     </svg>
   );

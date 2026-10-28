@@ -349,16 +349,83 @@ export default function PenEditor({
         </div>
         <div className="canvas-writing-tools" aria-label="Canvas drawing tools">
           <div className="tool-group">
-            <button type="button" aria-pressed={tool === "pen"} onClick={() => selectTool("pen")}>✎ Pen</button>
-            <button type="button" aria-pressed={tool === "eraser"} onClick={() => selectTool("eraser")}>Eraser</button>
-            <button type="button" aria-pressed={tool === "text"} onClick={() => setTool("text")}>Move photos / Text</button>
+            <button
+              type="button"
+              aria-pressed={tool === "pen"}
+              onClick={() => selectTool("pen")}
+            >
+              ✎ Pen
+            </button>
+            <button
+              type="button"
+              aria-pressed={tool === "eraser"}
+              onClick={() => selectTool("eraser")}
+            >
+              Eraser
+            </button>
+            <button
+              type="button"
+              aria-pressed={tool === "text"}
+              onClick={() => setTool("text")}
+            >
+              Move photos / Text
+            </button>
           </div>
-          {tool === "pen" && <div className="canvas-pen-settings">
-            <label>Pen style<select value={style} onChange={e => { const next=e.target.value as typeof style; setStyle(next); setWidth(next === "highlighter" ? 16 : next === "pencil" ? 2 : 3); }}><option value="ballpoint">Ballpoint</option><option value="pencil">Pencil</option><option value="highlighter">Highlighter</option></select></label>
-            <label>Ink color<input type="color" value={color} onChange={e => setColor(e.target.value)} /></label>
-            <label>Stroke size<input type="range" min={style === "highlighter" ? 12 : 1} max={style === "highlighter" ? 20 : 12} value={width} onChange={e => setWidth(Number(e.target.value))}/><output>{width} px</output></label>
-          </div>}
+          {tool === "pen" && (
+            <div className="canvas-pen-settings">
+              <label>
+                Pen style
+                <select
+                  value={style}
+                  onChange={(e) => {
+                    const next = e.target.value as typeof style;
+                    setStyle(next);
+                    setWidth(
+                      next === "highlighter" ? 16 : next === "pencil" ? 2 : 3,
+                    );
+                  }}
+                >
+                  <option value="ballpoint">Ballpoint</option>
+                  <option value="pencil">Pencil</option>
+                  <option value="highlighter">Highlighter</option>
+                </select>
+              </label>
+              <label>
+                Ink color
+                <input
+                  type="color"
+                  value={color}
+                  onChange={(e) => setColor(e.target.value)}
+                />
+              </label>
+              <label>
+                Stroke size
+                <input
+                  type="range"
+                  min={style === "highlighter" ? 12 : 1}
+                  max={style === "highlighter" ? 20 : 12}
+                  value={width}
+                  onChange={(e) => setWidth(Number(e.target.value))}
+                />
+                <output>{width} px</output>
+              </label>
+            </div>
+          )}
         </div>
+        <label className="sketch-paper-picker">
+          Sketch paper
+          <select
+            aria-label="Sketch paper"
+            value={page.paper}
+            onChange={(e) =>
+              onChange({ paper: e.target.value as NotebookPage["paper"] })
+            }
+          >
+            <option value="plain">Plain</option>
+            <option value="lined">Lined</option>
+            <option value="dots">Dotted</option>
+          </select>
+        </label>
         <PhotoCanvas
           page={page}
           onChange={onChange}
@@ -397,11 +464,14 @@ export default function PenEditor({
             ))}
             {pending && <Ink stroke={pending} />}
           </svg>
-          {!ink.length && !pending && !page.photoIds?.length && !page.stickers?.length && (
-            <span className="ink-empty" aria-hidden="true">
-              Add photos or write and sketch here
-            </span>
-          )}
+          {!ink.length &&
+            !pending &&
+            !page.photoIds?.length &&
+            !page.stickers?.length && (
+              <span className="ink-empty" aria-hidden="true">
+                Add photos or write and sketch here
+              </span>
+            )}
         </PhotoCanvas>
         <p className="ink-status" role="status">
           {notice ||

@@ -1,3 +1,5 @@
+import PdfExportButton from "./PdfExportButton";
+import type { WeekPlan } from "./planner";
 import { useEffect, useState } from "react";
 import type { Recipe } from "./model";
 import type { NotebookPage } from "./notebook";
@@ -14,12 +16,18 @@ type Props = {
   onChange: (patch: Partial<Recipe>) => void;
   openTemplates: () => void;
   initialPageId?: string;
+  weeks?: WeekPlan[];
+  week?: string;
+  recipes?: Recipe[];
 };
 export default function JournalWorkspace({
   recipe,
   onChange,
   openTemplates,
   initialPageId,
+  weeks,
+  week,
+  recipes,
 }: Props) {
   const pages = pagesFor(recipe);
   const [selected, setSelected] = useState(() => {
@@ -77,9 +85,18 @@ export default function JournalWorkspace({
             />
           </label>
         </div>
-        <button type="button" onClick={openTemplates}>
-          Choose a template →
-        </button>
+        <div className="export-actions">
+          <PdfExportButton
+            recipe={recipe}
+            notebook
+            weeks={weeks}
+            week={week}
+            recipes={recipes}
+          />
+          <button type="button" onClick={openTemplates}>
+            Choose a template →
+          </button>
+        </div>
       </div>
       {notice && <p role="status">{notice}</p>}
       <div className="page-strip" aria-label="Notebook pages">
@@ -126,7 +143,6 @@ export default function JournalWorkspace({
             </button>
           </div>
           <JournalCanvas key={page.id} page={page} onChange={update} />
-
         </>
       ) : (
         <div className="card empty">

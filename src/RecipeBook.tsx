@@ -1,22 +1,27 @@
 import { useState } from "react";
 import type { Recipe } from "./model";
 import { categoryOptions, sameCategory } from "./categories";
+import { matchesRecipe } from "./recipeSearch";
 export default function RecipeBook({
   recipes,
   openRecipe,
+  onCreate,
 }: {
   recipes: Recipe[];
   openRecipe: (id: string) => void;
+  onCreate: () => void;
 }) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
   const [subcategory, setSubcategory] = useState("");
-  const saved = recipes.filter((r) => r.ingredients.trim() || r.steps.trim());
+  const saved = recipes.filter(
+    (r) => r.recipeBook || r.ingredients.trim() || r.steps.trim(),
+  );
   const categories = categoryOptions(saved.map((r) => r.category));
   const subs = [
     ...new Set(
       saved
-        .filter((r) => sameCategory(r.category, category))
+        .filter((r) => !category || sameCategory(r.category, category))
         .map((r) => r.subcategory?.trim())
         .filter((s): s is string => Boolean(s)),
     ),
@@ -25,87 +30,76 @@ export default function RecipeBook({
     (r) =>
       (!category || sameCategory(r.category, category)) &&
       (!subcategory || sameCategory(r.subcategory ?? "", subcategory)) &&
-      `${r.title} ${r.category} ${r.subcategory ?? ""} ${r.ingredients}`
-        .toLowerCase()
-        .includes(query.toLowerCase()),
+      matchesRecipe(r, query),
   );
+  function clear() {
+    setQuery("");
+    setCategory("");
+    setSubcategory("");
+  }
   return (
     <section className="recipe-library" aria-label="Saved recipes">
       <div className="recipe-library-toolbar">
         <h2>
-          All saved recipes <span>{saved.length}</span>
+          My recipe book <span>{saved.length}</span>
         </h2>
-        <label>
+        <button type="button" className="primary" onClick={onCreate}>
+          ＋ New recipe
+        </button>
+      </div>
+      <div className="recipe-book-filters">
+        <label className="recipe-search-field">
           Search recipes
           <input
             type="search"
-            placeholder="Find a recipe or ingredient…"
+            placeholder="Recipe name, ingredients, or notes…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
         </label>
-      </div>
-      <nav className="recipe-category-tabs" aria-label="Recipe categories">
-        <button
-          type="button"
-          aria-pressed={!category}
-          onClick={() => {
-            setCategory("");
-            setSubcategory("");
-          }}
-        >
-          All recipes <span>{saved.length}</span>
-        </button>
-        {categories.map((c) => (
-          <button
-            type="button"
-            key={c}
-            aria-pressed={sameCategory(category, c)}
-            onClick={() => {
-              setCategory(c);
+        <label>
+          Category
+          <select
+            value={category}
+            onChange={(e) => {
+              setCategory(e.target.value);
               setSubcategory("");
             }}
           >
-            {c}{" "}
-            <span>
-              {saved.filter((r) => sameCategory(r.category, c)).length}
-            </span>
-          </button>
-        ))}
-      </nav>
-      <p className="category-help">
-        Choose a category, or open a recipe to create your own category and
-        subcategory.
-      </p>
-      {category && subs.length > 0 && (
-        <nav
-          className="recipe-subcategory-tabs"
-          aria-label="Recipe subcategories"
-        >
-          <span>{category} /</span>
-          <button
-            type="button"
-            aria-pressed={!subcategory}
-            onClick={() => setSubcategory("")}
+            <option value="">All categories</option>
+            {categories.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Subcategory
+          <select
+            value={subcategory}
+            onChange={(e) => setSubcategory(e.target.value)}
+            disabled={!subs.length}
           >
-            All
+            <option value="">All subcategories</option>
+            {subs.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+        </label>
+        {(query || category || subcategory) && (
+          <button type="button" onClick={clear}>
+            Clear filters
           </button>
-          {subs.map((s) => (
-            <button
-              type="button"
-              key={s}
-              aria-pressed={sameCategory(subcategory, s)}
-              onClick={() => setSubcategory(s)}
-            >
-              {s}
-            </button>
-          ))}
-        </nav>
-      )}
-      <p className="recipe-filter-count">
+        )}
+      </div>
+      <p className="recipe-filter-count" role="status">
         {visible.length} {visible.length === 1 ? "recipe" : "recipes"}
         {category ? ` in ${category}` : ""}
         {subcategory ? ` / ${subcategory}` : ""}
+        {query.trim() ? ` matching “${query.trim()}”` : ""}
       </p>
       <div className="saved-recipe-grid">
         {visible.map((r) => (
@@ -118,7 +112,7 @@ export default function RecipeBook({
               ♧
             </span>
             <span className="eyebrow">
-              {r.category || "My recipes"}
+              {r.category || "Uncategorized"}
               {r.subcategory ? ` / ${r.subcategory}` : ""}
             </span>
             <h3>{r.title || "Untitled recipe"}</h3>
@@ -128,7 +122,9 @@ export default function RecipeBook({
               ingredients
             </span>
             <span className="recipe-card-action">
-              View ingredients & method →
+              {!r.ingredients.trim() && !r.steps.trim()
+                ? "Finish this recipe →"
+                : "View ingredients & method →"}
             </span>
           </button>
         ))}
@@ -136,29 +132,22 @@ export default function RecipeBook({
       {!visible.length && (
         <div className="card empty">
           <h3>
-            {saved.length
-              ? "No recipes here yet."
-              : "Your saved recipes will appear here."}
+            {!saved.length
+              ? "Your recipe book starts here."
+              : "No matching recipes."}
           </h3>
           <p>
-            {category
-              ? `Open a saved recipe and set its category to ${category}, or try another filter.`
-              : saved.length
-                ? "Try another name or ingredient."
-                : "Add ingredients to an experiment, or save an AI recipe draft to your Recipe Book."}
+            {!saved.length
+              ? "Create a recipe, or save an AI draft to your book."
+              : "Search only looks in this recipe book. Try a different term or clear the category filters."}
           </p>
-          {(category || query) && (
-            <button
-              type="button"
-              onClick={() => {
-                setCategory("");
-                setSubcategory("");
-                setQuery("");
-              }}
-            >
-              Show all recipes
-            </button>
-          )}
+          <button
+            type="button"
+            className="primary"
+            onClick={!saved.length ? onCreate : clear}
+          >
+            {!saved.length ? "＋ New recipe" : "Show all recipes"}
+          </button>
         </div>
       )}
     </section>

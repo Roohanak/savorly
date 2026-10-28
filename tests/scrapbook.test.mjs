@@ -22,3 +22,12 @@ test('grocery groups preserve ingredients while sorting labels',()=>{
  assert.equal(groceryGroup('1 cup lentils'),'Pantry');
  assert.equal(groceryGroup('Kitchen paper'),'Other');
 });
+
+test('sticker corner resizing grows, shrinks and stays inside the page', async()=>{
+ const {resizeSticker}=await import('../src/stickers.ts');
+ const source={id:'s',kind:'cat',x:20,y:20,size:12,rotation:0};
+ assert.equal(resizeSticker(source,90,55,900,550).size,22);
+ assert.equal(resizeSticker(source,-90,-55,900,550).size,5);
+ assert.equal(resizeSticker({...source,x:88,y:88},900,550,900,550).size,12);
+ assert.equal(resizeSticker(source,0,0,900,550).size,12);
+});

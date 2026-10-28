@@ -1,3 +1,4 @@
+import PdfExportButton from "./PdfExportButton";
 import {
   categoryOptions,
   defaultSubcategories,
@@ -293,6 +294,23 @@ export default function App() {
     setRecipes([...recipesRef.current, r]);
     choose(r.id);
     navigate("journal", r.id);
+  }
+  function createRecipe() {
+    const r: Recipe = {
+      id: newId(),
+      title: "Untitled recipe",
+      category: "Uncategorized",
+      servings: 2,
+      ingredients: "",
+      steps: "",
+      notes: "",
+      attempts: [],
+      journalPages: [],
+      recipeBook: true,
+    };
+    setRecipes([...recipesRef.current, r]);
+    choose(r.id);
+    navigate("recipes", r.id);
   }
   async function download() {
     setJournalBusy(true);
@@ -652,11 +670,38 @@ export default function App() {
               )
               .map((r) => (
                 <div className="experiment-row" key={r.id}>
-                  <button type="button" className={"recipe-link " + (r.id === selected ? "active" : "")} onClick={() => choose(r.id)} title={`${r.title || "Untitled experiment"} · ${pagesFor(r).length} pages · ${r.attempts.length} attempts`}>
-                    <span className="experiment-name">{r.title || "Untitled experiment"}</span>
+                  <button
+                    type="button"
+                    className={
+                      "recipe-link " + (r.id === selected ? "active" : "")
+                    }
+                    onClick={() => choose(r.id)}
+                    title={`${r.title || "Untitled experiment"} · ${pagesFor(r).length} pages · ${r.attempts.length} attempts`}
+                  >
+                    <span className="experiment-name">
+                      {r.title || "Untitled experiment"}
+                    </span>
                   </button>
-                  <button type="button" className="sidebar-delete danger" title="Delete experiment" aria-label={`Delete experiment ${r.title || "Untitled experiment"}`} onClick={() => deleteExperiment(r.id)}>
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 6h18M9 6V4h6v2M5 6l1 14h12l1-14M10 10v6M14 10v6"/></svg>
+                  <button
+                    type="button"
+                    className="sidebar-delete danger"
+                    title="Delete experiment"
+                    aria-label={`Delete experiment ${r.title || "Untitled experiment"}`}
+                    onClick={() => deleteExperiment(r.id)}
+                  >
+                    <svg
+                      width="15"
+                      height="15"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.7"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M3 6h18M9 6V4h6v2M5 6l1 14h12l1-14M10 10v6M14 10v6" />
+                    </svg>
                   </button>
                 </div>
               ))}
@@ -813,6 +858,7 @@ export default function App() {
           ) : page === "recipes" && !route.recipeId ? (
             <RecipeBook
               recipes={recipes}
+              onCreate={createRecipe}
               openRecipe={(id) => navigate("recipes", id)}
             />
           ) : !recipe ? (
@@ -831,11 +877,15 @@ export default function App() {
                   recipe={recipe}
                   onChange={update}
                   openTemplates={() => navigate("templates")}
+                  weeks={plans}
+                  week={plannerWeek}
+                  recipes={recipes}
                 />
               )}
               {page === "recipes" && (
                 <section className="editor card recipe-page-editor">
                   <div className="editor-heading">
+                    <PdfExportButton recipe={recipe} />
                     <button
                       className="text-button"
                       onClick={() => navigate("recipes", "")}

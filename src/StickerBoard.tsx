@@ -1,8 +1,8 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { PointerEvent } from "react";
 import type { NotebookPage } from "./notebook";
 import { newId } from "./id";
-import { stickerKinds } from "./stickers";
+import { stickerKinds, resizeSticker, rotateSticker } from "./stickers";
 import type { Sticker } from "./stickers";
 import StickerArt from "./StickerArt";
 const clamp = (n: number, min: number, max: number) =>
@@ -11,7 +11,6 @@ export function StickerPicker({
   page,
   onChange,
   onArrange,
-  selected,
   setSelected,
 }: {
   page: NotebookPage;
@@ -22,7 +21,7 @@ export function StickerPicker({
 }) {
   const [open, setOpen] = useState(false);
   const [undo, setUndo] = useState<Sticker[] | null>(null);
-  const chosen = page.stickers?.find((s) => s.id === selected);
+
   function change(stickers: Sticker[]) {
     setUndo(page.stickers ?? []);
     onChange({ stickers });
@@ -32,7 +31,7 @@ export function StickerPicker({
       <button type="button" onClick={() => setOpen(!open)} aria-expanded={open}>
         ✿ Stickers
       </button>
-      <span className="sticker-hint">Little things, just for you.</span>
+      <span className="sticker-hint">26 little things, just for you.</span>
       {open && (
         <div className="sticker-picker" aria-label="Sticker choices">
           {stickerKinds.map((kind) => (
@@ -65,62 +64,10 @@ export function StickerPicker({
           ))}
         </div>
       )}
-      {chosen && (
-        <div className="sticker-adjust">
-          <label>
-            Sticker size
-            <input
-              type="range"
-              min="5"
-              max="30"
-              value={chosen.size}
-              onChange={(e) => {
-                const size = Number(e.target.value);
-                onChange({
-                  stickers: page.stickers?.map((s) =>
-                    s.id === selected
-                      ? {
-                          ...s,
-                          size,
-                          x: Math.min(s.x, 100 - size),
-                          y: Math.min(s.y, 100 - size),
-                        }
-                      : s,
-                  ),
-                });
-              }}
-            />
-          </label>
-          <label>
-            Tilt
-            <input
-              type="range"
-              min="-30"
-              max="30"
-              value={chosen.rotation}
-              onChange={(e) =>
-                onChange({
-                  stickers: page.stickers?.map((s) =>
-                    s.id === selected
-                      ? { ...s, rotation: Number(e.target.value) }
-                      : s,
-                  ),
-                })
-              }
-            />
-          </label>
-          <button
-            type="button"
-            className="danger"
-            onClick={() => {
-              change((page.stickers ?? []).filter((s) => s.id !== selected));
-              setSelected("");
-            }}
-          >
-            Remove sticker
-          </button>
-        </div>
-      )}
+      <span className="sticker-resize-tip">
+        Select a sticker, drag its corner to resize or the round handle to
+        rotate. Delete/Backspace removes it; Esc deselects.
+      </span>
       {undo && (
         <button
           type="button"
@@ -156,14 +103,67 @@ export function StickerLayer({
     y: number;
     rect: DOMRect;
     latest: Sticker;
+    original: Sticker;
+    resize: boolean;
+    rotate: boolean;
+    startAngle: number;
+    centerX: number;
+    centerY: number;
+    pointerId: number;
   } | null>(null);
+  const previous = useRef<Sticker[] | null>(null);
+  useEffect(() => {
+    function key(e: KeyboardEvent) {
+      const el = e.target as HTMLElement;
+      if (
+        !movable ||
+        el.closest("input,textarea,select,[contenteditable=true]")
+      )
+        return;
+      if (e.key === "Escape") {
+        setSelected("");
+        return;
+      }
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        e.key.toLowerCase() === "z" &&
+        previous.current &&
+        (el === document.body || el.closest(".canvas-sticker-layer"))
+      ) {
+        e.preventDefault();
+        onChange({ stickers: previous.current });
+        previous.current = null;
+        return;
+      }
+      if (selected && ["Delete", "Backspace"].includes(e.key)) {
+        e.preventDefault();
+        previous.current = page.stickers ?? [];
+        onChange({ stickers: page.stickers?.filter((s) => s.id !== selected) });
+        setSelected("");
+      }
+    }
+    document.addEventListener("keydown", key);
+    return () => document.removeEventListener("keydown", key);
+  }, [movable, selected, page.stickers, onChange, setSelected]);
   const [draft, setDraft] = useState<Sticker | null>(null);
-  function down(e: PointerEvent<HTMLDivElement>, s: Sticker) {
-    if (!movable || e.button !== 0) return;
+  function down(
+    e: PointerEvent<HTMLDivElement>,
+    s: Sticker,
+    resize = false,
+    rotate = false,
+  ) {
+    if (!movable || e.button !== 0 || active.current) return;
     e.preventDefault();
     e.stopPropagation();
     setSelected(s.id);
-    const rect = e.currentTarget.parentElement!.getBoundingClientRect();
+    const owner = e.currentTarget.closest(".placed-sticker") as HTMLElement;
+    owner?.focus({ preventScroll: true });
+    const box = owner.getBoundingClientRect();
+    const centerX = box.x + box.width / 2,
+      centerY = box.y + box.height / 2;
+    const rect = e.currentTarget
+      .closest(".canvas-sticker-layer")!
+      .getBoundingClientRect();
     active.current = {
       id: s.id,
       startX: e.clientX,
@@ -172,12 +172,42 @@ export function StickerLayer({
       y: s.y,
       rect,
       latest: s,
+      original: s,
+      resize,
+      rotate,
+      centerX,
+      centerY,
+      startAngle: Math.atan2(e.clientY - centerY, e.clientX - centerX),
+      pointerId: e.pointerId,
     };
     e.currentTarget.setPointerCapture(e.pointerId);
   }
   function move(e: PointerEvent<HTMLDivElement>) {
     const a = active.current;
-    if (!a) return;
+    if (!a || a.pointerId !== e.pointerId) return;
+    if (a.rotate) {
+      a.latest = {
+        ...a.original,
+        rotation: rotateSticker(
+          a.original.rotation,
+          Math.atan2(e.clientY - a.centerY, e.clientX - a.centerX) -
+            a.startAngle,
+        ),
+      };
+      setDraft(a.latest);
+      return;
+    }
+    if (a.resize) {
+      a.latest = resizeSticker(
+        a.original,
+        e.clientX - a.startX,
+        e.clientY - a.startY,
+        a.rect.width,
+        a.rect.height,
+      );
+      setDraft(a.latest);
+      return;
+    }
     a.latest = {
       ...a.latest,
       x: clamp(
@@ -195,7 +225,8 @@ export function StickerLayer({
   }
   function finish(e: PointerEvent<HTMLDivElement>) {
     const a = active.current;
-    if (!a) return;
+    if (!a || a.pointerId !== e.pointerId) return;
+    previous.current = page.stickers ?? [];
     onChange({
       stickers: page.stickers?.map((s) => (s.id === a.id ? a.latest : s)),
     });
@@ -275,6 +306,84 @@ export function StickerLayer({
             <span style={{ transform: `rotate(${s.rotation}deg)` }}>
               <StickerArt kind={s.kind} />
             </span>
+            {movable && selected === s.id && (
+              <div
+                className="sticker-rotate-handle"
+                role="slider"
+                tabIndex={0}
+                aria-label={`Rotate ${s.kind} sticker`}
+                aria-valuemin={-180}
+                aria-valuemax={180}
+                aria-valuenow={Math.round(s.rotation)}
+                title="Drag to rotate"
+                onPointerDown={(e) => down(e, s, false, true)}
+                onPointerMove={move}
+                onPointerUp={finish}
+                onPointerCancel={finish}
+                onKeyDown={(e) => {
+                  if (!["ArrowLeft", "ArrowRight"].includes(e.key)) return;
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onChange({
+                    stickers: page.stickers?.map((p) =>
+                      p.id === s.id
+                        ? {
+                            ...p,
+                            rotation: rotateSticker(
+                              p.rotation,
+                              ((e.key === "ArrowRight" ? 5 : -5) * Math.PI) /
+                                180,
+                            ),
+                          }
+                        : p,
+                    ),
+                  });
+                }}
+              >
+                ↻
+              </div>
+            )}
+            {movable && selected === s.id && (
+              <div
+                className="sticker-resize-handle"
+                role="slider"
+                tabIndex={0}
+                aria-label={`Resize ${s.kind} sticker`}
+                aria-valuemin={5}
+                aria-valuemax={Math.min(30, 100 - s.x, 100 - s.y)}
+                aria-valuenow={Math.round(s.size)}
+                title="Drag to resize"
+                onPointerDown={(e) => down(e, s, true)}
+                onPointerMove={move}
+                onPointerUp={finish}
+                onPointerCancel={finish}
+                onKeyDown={(e) => {
+                  if (
+                    ![
+                      "ArrowLeft",
+                      "ArrowRight",
+                      "ArrowUp",
+                      "ArrowDown",
+                    ].includes(e.key)
+                  )
+                    return;
+                  e.preventDefault();
+                  e.stopPropagation();
+                  const size = clamp(
+                    s.size +
+                      (["ArrowRight", "ArrowUp"].includes(e.key) ? 1 : -1) *
+                        (e.shiftKey ? 5 : 1),
+                    5,
+                    Math.min(30, 100 - s.x, 100 - s.y),
+                  );
+                  onChange({
+                    stickers: page.stickers?.map((p) =>
+                      p.id === s.id ? { ...p, size } : p,
+                    ),
+                  });
+                }}
+              />
+            )}
           </div>
         );
       })}

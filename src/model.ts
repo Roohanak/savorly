@@ -16,6 +16,7 @@ export type Recipe = {
   title: string;
   category: string;
   subcategory?: string;
+  recipeBook?: boolean;
   servings: number;
   ingredients: string;
   steps: string;
@@ -144,6 +145,7 @@ export function validateRecipes(value: unknown): asserts value is Recipe[] {
         r.servings <= 100 &&
         (r.subcategory === undefined ||
           (typeof r.subcategory === "string" && r.subcategory.length <= 100)) &&
+        (r.recipeBook === undefined || typeof r.recipeBook === "boolean") &&
         validIds(r.photoIds) &&
         validPages(r.journalPages) &&
         Array.isArray(r.attempts) &&
