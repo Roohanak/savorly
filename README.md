@@ -49,7 +49,7 @@ The scrapbook palette uses cherry-red gingham accents, cream paper and brighter 
 
 The top-bar **Scrapbook / Plain paper** button switches between the cozy notebook-photo backdrop and the original white workspace; the preference stays on this device. Sketches blend into dotted/lined paper in Scrapbook mode. Grocery items appear in four sticky-note groups (Produce, Dairy & protein, Pantry, Other); automatic keyword grouping is a visual convenience, not a food taxonomy. Each sticky also has a directly writable multiline notes area. These freeform notes save per week and are shared between the weekly notebook and Meal Planner; they do not automatically become checkbox items. Use Add a shopping item for checkable items.
 
-Inside a notebook's Handwriting & sketches area, open **Stickers** to add original vector pasta, strawberry, mushroom, flower, cat, chicken, heart, sparkle, coffee, bread and 16 more doodles. Use **Move photos / Text** to drag stickers, or focus a sticker and use arrow keys. Drag the corner to resize or the round handle to rotate. Delete/Backspace removes the selected sticker, Escape deselects, and Ctrl/Cmd+Z undoes the last sticker change. Choose Pen to draw over stickers/photos. Up to 30 stickers per page; positions, size and tilt are saved with the notebook and included in validated backups/cloud snapshots. Ink and stickers are not sent to AI.
+Inside a notebook's Handwriting & sketches area, open **Stickers** to add original vector pasta, strawberry, mushroom, flower, cat, chicken, heart, sparkle, coffee, bread and 22 more doodles. Use **Move photos / Text** to drag stickers, or focus a sticker and use arrow keys. Drag the corner to resize or the round handle to rotate. Delete/Backspace removes the selected sticker, Escape deselects, and Ctrl/Cmd+Z undoes the last sticker change. Choose Pen to draw over stickers/photos. Up to 30 stickers per page; positions, size and tilt are saved with the notebook and included in validated backups/cloud snapshots. Ink and stickers are not sent to AI.
 
 The supplied reference photo in `public/backgrounds/cozy-notebook.png` is used unmodified as the page backdrop. Confirm distribution rights or replace it before public release. `kitchen-doodles.svg` and `StickerArt.tsx` are original code-drawn assets.
 
@@ -119,9 +119,13 @@ Use Save recipe PDF in a recipe or Save notebook PDF in the journal to download 
 ### Toddler planner theme
 Use the Theme dropdown in the top bar to choose Plain paper, Scrapbook, or Toddler planner. Toddler planner adds original vector baby, teddy, cloud and star wallpaper, lavender navigation, pastel day cards and matching grocery panels. The selection is saved in this browser and does not change notebook content.
 
-Each notebook page also has Save this page PDF beside its page title. This exports that selected page only, using its title in the filename. Save notebook PDF still includes all pages. Plain freeform, lined and dotted pages retain their sketch area even without ink.
+Each notebook page also has Save this page PDF beside its page title. This exports that selected page only, using its title in the filename. Save all pages PDF still includes all pages. Plain freeform, lined and dotted pages retain their sketch area even without ink.
 
 ### Toddler notebook templates
 Templates includes Toddler day planner (meals, naps, play, mood and tomorrow), Toddler memory notes, and Toddler sketchbook. Their artwork and fields apply independently of the app appearance. They use the same pen/eraser, photo canvas, draggable/resizable/rotatable stickers and per-page/all-notebook PDF exports. The sticker tray includes baby, teddy, cloud, rainbow, blocks and bottle designs. Outside text fields, Ctrl/Cmd+Z undoes the latest page edit, Ctrl/Cmd+Shift+Z or Ctrl+Y redoes it; Delete/Backspace removes a selected sticker and Escape deselects. History is limited to 30 edits per page while that journal workspace stays open; text fields retain browser-native undo.
 
 PDF notebook copies preserve each page's chosen color and template headings, including empty field cards. Toddler pages include their baby wallpaper and lavender accents. Long field values continue onto additional pages; the export uses a printable A4 layout rather than capturing browser controls.
+
+## Partner priorities (October 28)
+
+Start with [docs/HANDOFF.md](docs/HANDOFF.md). PDF visual verification is the first remaining priority: the latest journal wiring fix passes build/tests but the resulting download has not been visually confirmed. The handoff distinguishes implemented features from unverified device/cloud behavior and proposes optional areas for the partner to choose. [docs/TEST_PLAN.md](docs/TEST_PLAN.md) includes the edit-to-PDF regression checklist.

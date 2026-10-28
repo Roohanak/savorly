@@ -2,6 +2,18 @@
 
 Use synthetic cooking notes in a separate browser profile. Never test destructive restore against the owner's only journal. Record browser/OS/device, steps, expected/actual behavior, a screenshot and severity for each issue.
 
+## P0 — PDF regression: first priority (not yet visually verified)
+
+Use disposable notes and retain the downloaded files as evidence. The last wiring fix is `78eb2cf`; use that revision or newer.
+
+- [ ] In the same page, replace a unique phrase such as OLD-NOTE with NEW-NOTE. Export immediately and confirm only NEW-NOTE appears on that page. Repeat after navigation and reload, including a cold first export while the PDF module loads.
+- [ ] Change title, freeform text and a template field separately. Confirm all three update in the PDF, not just the title.
+- [ ] Export the selected second/last page: its PDF must contain that page only. All-pages export must contain every existing page in notebook order; earlier saved pages remain included.
+- [ ] In Toddler planner appearance, export older freeform/cooking pages and toddler pages together. Verify wallpaper/accents on all exported pages, blank writable fields and correct current text. A theme change must not rewrite user content.
+- [ ] Compare photos, rotated/resized stickers and pen strokes with the app. Check that erasing/deleting and undoing are reflected in the next PDF.
+- [ ] Use long notes and multi-page content. No clipped text, orphaned sketch headings, missing drawings or unintended blank sheets. Check images at 100% and printed A4 layout.
+- [ ] Check both a single-page and all-pages download in Chrome and an iPad browser. Record file name, app revision, browser and expected/actual page content. PDF is a snapshot; older downloads do not update automatically.
+
 ## P0 — must work for submission
 
 - [ ] Clone on a second computer using Node 24; `npm ci`, `npm test`, `npm run lint`, `npm run build` all succeed. No secret/local files are needed for local-only features.
@@ -22,7 +34,7 @@ Use synthetic cooking notes in a separate browser profile. Never test destructiv
 - [ ] Test small phone, iPad portrait/landscape and desktop layouts: no unusable overflow, clipped controls or buttons hidden by sticky toolbars.
 - [ ] Physical stylus: confirm pointer mapping, pressure, palm/touch behavior, page scrolling and movement of images/stickers. Browser emulation alone is insufficient.
 - [ ] Test keyboard navigation, visible focus, labels, error/loading/empty states and non-hover touch controls.
-- [ ] Toggle Scrapbook/Plain and revisit the app. Confirm readability and selected week/appearance persistence.
+- [ ] Switch Plain/Scrapbook/Toddler planner and revisit the app. Confirm toddler-only template filtering and that existing pages remain intact. Confirm readability and selected week/appearance persistence.
 - [ ] Review confusing labels and overly complex flows. Propose two highest-impact interaction improvements, then implement focused fixes on a branch.
 
 ## P1 — remaining infrastructure (not completed)
