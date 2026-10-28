@@ -19,8 +19,8 @@ type Props = {
   weeks?: WeekPlan[];
   week?: string;
   recipes?: Recipe[];
-  appearance?: string;
-  getRecipe?: () => Recipe | undefined;
+  appearance: string;
+  getRecipe: () => Recipe | undefined;
 };
 export default function JournalWorkspace({
   recipe,

@@ -377,10 +377,12 @@ export async function exportNotebook(
       page.photoIds?.length ||
       page.stickers?.length
     ) {
+      p.room(780);
       p.heading(toddler ? "Little doodles & keepsakes" : "Sketches, photos & stickers");
       await p.sketch(page);
     }
     if (page.strokes.some((s) => s.region !== "pad")) {
+      p.room(780);
       p.heading("Earlier handwriting");
       await p.sketch(page, true);
     }

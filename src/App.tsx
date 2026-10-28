@@ -868,6 +868,8 @@ export default function App() {
               {page === "journal" && (
                 <JournalWorkspace
                   key={recipe.id + ":" + focusPage}
+                  appearance={appearance}
+                  getRecipe={() => recipesRef.current.find(r => r.id === recipe.id)}
                   initialPageId={focusPage}
                   recipe={recipe}
                   onChange={update}
