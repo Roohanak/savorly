@@ -36,7 +36,7 @@ class Paper {
   wallpaper: HTMLImageElement | null = null;
   async decorate(page: Pick<NotebookPage, "template" | "color">, appearance?: string) {
     const design = templateDesign(page.template);
-    const toddler = appearance === "toddler" || page.template.startsWith("toddler");
+    const toddler = appearance === "toddler";
     this.pageColor = toddler ? "#f8f1fc" : page.color ?? design.color;
     this.accent = toddler ? "#916092" : design.accent;
     this.wallpaper = toddler
@@ -336,7 +336,7 @@ export async function exportNotebook(
     await p.decorate(page, appearance);
     p.text(recipe.title || "Kitchen notebook", 25, "#9b6d63");
     p.text(page.title || `Page ${i + 1}`, 50, p.accent, true);
-    const toddler = appearance === "toddler" || page.template.startsWith("toddler");
+    const toddler = appearance === "toddler";
     p.text((toddler && !page.template.startsWith("toddler") ? "Little days · " : "") + templateDesign(page.template).format, 25, p.accent);
     const design = templateDesign(page.template);
     for (const field of design.fields) {

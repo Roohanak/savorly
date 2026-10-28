@@ -35,9 +35,11 @@ function Ink({ stroke }: { stroke: InkStroke }) {
 }
 export default function PenEditor({
   page,
+  appearance,
   onChange,
 }: {
   page: NotebookPage;
+  appearance: string;
   onChange: (patch: Partial<NotebookPage>) => void;
 }) {
   const [tool, setTool] = useState<"text" | "pen" | "eraser" | "scroll">(
@@ -157,7 +159,7 @@ export default function PenEditor({
     setPending(gesture.stroke);
   }
   return (
-    <div className={"notebook-editor bounded-editor" + (page.template.startsWith("toddler") ? " toddler-notebook" : "")}>
+    <div className={"notebook-editor bounded-editor" + (appearance === "toddler" ? " toddler-notebook" : "")}>
       <div className="writing-toolbar editor-tools" aria-label="Writing tools">
         <div className="tool-group">
           {(
@@ -323,7 +325,7 @@ export default function PenEditor({
       <section className="drawing-panel" aria-label="Handwriting and sketches">
         <div className="drawing-heading">
           <div>
-            <h3>{page.template.startsWith("toddler") ? "Little doodles & keepsakes" : "Handwriting & sketches"}</h3>
+            <h3>{appearance === "toddler" ? "Little doodles & keepsakes" : "Handwriting & sketches"}</h3>
             <p>
               {tool === "pen"
                 ? "Draw inside the box below. Ink stays attached to this box."

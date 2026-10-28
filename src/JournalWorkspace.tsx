@@ -103,10 +103,10 @@ export default function JournalWorkspace({
     setSelected(next.id);
   }
   return (
-    <section className={"journal-workspace" + (page?.template.startsWith("toddler") ? " toddler-pages" : "")}>
+    <section className={"journal-workspace" + (appearance === "toddler" ? " toddler-pages" : "")}>
       <div className="notebook-heading">
         <div>
-          <p className="eyebrow">{page?.template.startsWith("toddler") ? "LITTLE DAYS, LOVELY MEMORIES" : "THE MESSY PART IS THE GOOD PART"}</p>
+          <p className="eyebrow">{appearance === "toddler" ? "LITTLE DAYS, LOVELY MEMORIES" : "THE MESSY PART IS THE GOOD PART"}</p>
           <label className="experiment-title">
             Experiment title
             <input
@@ -176,7 +176,7 @@ export default function JournalWorkspace({
               Delete page
             </button>
           </div>
-          <JournalCanvas key={page.id} page={page} onChange={update} />
+          <JournalCanvas key={page.id} page={page} appearance={appearance} onChange={update} />
         </>
       ) : (
         <div className="card empty">
