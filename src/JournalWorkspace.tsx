@@ -108,9 +108,9 @@ export default function JournalWorkspace({
         <div>
           <p className="eyebrow">{appearance === "toddler" ? "LITTLE DAYS, LOVELY MEMORIES" : "THE MESSY PART IS THE GOOD PART"}</p>
           <label className="experiment-title">
-            Experiment title
+            Journal title
             <input
-              aria-label="Experiment title"
+              aria-label="Journal title"
               value={recipe.title}
               onChange={(e) => onChange({ title: e.target.value })}
             />

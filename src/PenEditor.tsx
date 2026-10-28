@@ -370,7 +370,7 @@ export default function PenEditor({
               aria-pressed={tool === "text"}
               onClick={() => setTool("text")}
             >
-              Move photos / Text
+              Text
             </button>
           </div>
           {tool === "pen" && (

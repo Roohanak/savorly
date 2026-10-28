@@ -129,3 +129,11 @@ PDF notebook copies preserve each page's chosen color and template headings, inc
 ## Partner priorities (October 28)
 
 Start with [docs/HANDOFF.md](docs/HANDOFF.md). PDF visual verification is the first remaining priority: the latest journal wiring fix passes build/tests but the resulting download has not been visually confirmed. The handoff distinguishes implemented features from unverified device/cloud behavior and proposes optional areas for the partner to choose. [docs/TEST_PLAN.md](docs/TEST_PLAN.md) includes the edit-to-PDF regression checklist.
+
+## Saving, journal library and nutrition
+
+My Journal opens searchable journal cards; Recipe Book keeps its own recipe gallery. The old mixed sidebar list is removed. New journal creates a notebook. Changes still autosave; Save now explicitly writes the current journal/planner state and reports success or a storage error. PDF export is separate from saving.
+
+Canvas photos and stickers are locked by default. Turn on Arrange photos & stickers to select, move, resize or rotate; turn it off to hide selection controls. Use Delete/Backspace on a selected photo/sticker, Escape to deselect, and session-local undo/redo for page edits.
+
+Recipes have Estimate calories & macros. It sends only the recipe title, base servings, ingredients and method to the configured AI provider. Results are approximate model estimates, not verified food-database calculations. Missing essential quantities suppress numeric results and prompt for more details. Editing ingredients, method or base servings clears the estimate. One live provider request with synthetic ingredients succeeded; physical-device and browser UI testing remain partner tasks.

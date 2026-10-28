@@ -18,7 +18,7 @@ function defaultPlacement(index: number): PhotoPlacement {
 export default function PhotoCanvas({
   page,
   onChange,
-  movable,
+  movable: canArrange,
   onArrange,
   padRef,
   className,
@@ -32,6 +32,8 @@ export default function PhotoCanvas({
   className: string;
   children: ReactNode;
 }) {
+  const [arranging, setArranging] = useState(false);
+  const movable = canArrange && arranging;
   const [selectedSticker, setSelectedSticker] = useState("");
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [selected, setSelected] = useState("");
@@ -117,7 +119,7 @@ export default function PhotoCanvas({
         photoIds: [...(page.photoIds ?? []), ...added.map((p) => p.id)],
         photoLayout: layout,
       });
-      setSelected(added[0].id);
+      setSelected("");
       onArrange();
       requestAnimationFrame(() =>
         padRef.current?.scrollIntoView({ block: "center", behavior: "smooth" }),
@@ -192,10 +194,13 @@ export default function PhotoCanvas({
             }}
           />
         </label>
-        <button type="button" onClick={onArrange} aria-pressed={movable}>
-          Move photos
+        <button type="button" onClick={() => {
+          if (movable) { setArranging(false); setSelected(""); setSelectedSticker(""); }
+          else { onArrange(); setArranging(true); }
+        }} aria-pressed={movable}>
+          Arrange photos & stickers {movable ? "· On" : "· Off"}
         </button>
-        {selected && (page.photoIds ?? []).includes(selected) && (
+        {movable && selected && (page.photoIds ?? []).includes(selected) && (
           <button
             type="button"
             className="danger"
@@ -227,7 +232,7 @@ export default function PhotoCanvas({
         <small>
           {movable
             ? "Drag photos anywhere inside the canvas. Drag the corner to resize. Arrow keys move a selected photo."
-            : "Choose Move photos to arrange images, or Pen to draw over them."}
+            : "Turn on Arrange photos & stickers to move or resize. Turn it off for a clean page."}
         </small>
       </div>
       <StickerPicker
@@ -253,7 +258,7 @@ export default function PhotoCanvas({
                 role="button"
                 tabIndex={movable ? 0 : -1}
                 aria-label={`Move photo ${photo.name}`}
-                aria-pressed={selected === photo.id}
+                aria-pressed={movable && selected === photo.id}
                 className={
                   "canvas-photo" +
                   (selected === photo.id && movable ? " selected" : "")
@@ -271,6 +276,13 @@ export default function PhotoCanvas({
                 onPointerCancel={finish}
                 onClick={() => setSelected(photo.id)}
                 onKeyDown={(e) => {
+                  if (movable && e.key === "Escape") { setSelected(""); return; }
+                  if (movable && selected === photo.id && ["Delete", "Backspace"].includes(e.key)) {
+                    e.preventDefault(); remember();
+                    const layout = { ...page.photoLayout }; delete layout[photo.id];
+                    onChange({ photoIds: (page.photoIds ?? []).filter(id => id !== photo.id), photoLayout: layout });
+                    setSelected(""); return;
+                  }
                   if (
                     !movable ||
                     ![

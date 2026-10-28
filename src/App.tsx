@@ -1,3 +1,5 @@
+import JournalLibrary from "./JournalLibrary";
+import NutritionPanel from "./NutritionPanel";
 import PdfExportButton from "./PdfExportButton";
 import {
   categoryOptions,
@@ -218,7 +220,7 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: "instant" });
   }
 
-  const [search, setSearch] = useState("");
+
 
   const [status, setStatus] = useState("");
   const [target, setTarget] = useState(2);
@@ -277,7 +279,7 @@ export default function App() {
   function create() {
     const r: Recipe = {
       id: newId(),
-      title: "Untitled experiment",
+      title: "Untitled journal",
       category: "Uncategorized",
       servings: 2,
       ingredients: "",
@@ -306,6 +308,13 @@ export default function App() {
     setRecipes([...recipesRef.current, r]);
     choose(r.id);
     navigate("recipes", r.id);
+  }
+  function saveNow() {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(recipesRef.current));
+      localStorage.setItem("savorly-planner-v1", JSON.stringify(plansRef.current));
+      setStatus("Saved now · " + new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}) + " · Autosave is on");
+    } catch { setStatus("Could not save locally. Download a backup to protect your changes."); }
   }
   async function download() {
     setJournalBusy(true);
@@ -589,7 +598,7 @@ export default function App() {
     } else {
       const r: Recipe = {
         id: newId(),
-        title: "Untitled experiment",
+        title: "Untitled journal",
         category: "Uncategorized",
         servings: 2,
         ingredients: "",
@@ -625,7 +634,7 @@ export default function App() {
           </a>
           <p className="eyebrow">YOUR PERSONAL RECIPE LAB</p>
           <button className="primary new-button" onClick={create}>
-            ＋ New experiment
+            ＋ New journal
           </button>
           <nav className="main-navigation" aria-label="Main pages">
             {sections.map(([id, icon, label]) => (
@@ -634,7 +643,7 @@ export default function App() {
                 href={
                   "#/" +
                   id +
-                  (id !== "recipes" && selected
+                  (!["recipes", "journal"].includes(id) && selected
                     ? "/" + encodeURIComponent(selected)
                     : "")
                 }
@@ -644,67 +653,6 @@ export default function App() {
                 {label}
               </a>
             ))}
-          </nav>
-          <div className="sidebar-heading">
-            YOUR EXPERIMENTS <span>{recipes.length}</span>
-          </div>
-          <label className="search-label">
-            Find an experiment
-            <input
-              placeholder="Search experiments…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </label>
-          <nav className="experiment-navigation" aria-label="Experiments">
-            {recipes
-              .filter((r) =>
-                (r.title + r.category)
-                  .toLowerCase()
-                  .includes(search.toLowerCase()),
-              )
-              .map((r) => (
-                <div className="experiment-row" key={r.id}>
-                  <button
-                    type="button"
-                    className={
-                      "recipe-link " + (r.id === selected ? "active" : "")
-                    }
-                    onClick={() => choose(r.id)}
-                    title={`${r.title || "Untitled experiment"} · ${pagesFor(r).length} pages · ${r.attempts.length} attempts`}
-                  >
-                    <span className="experiment-name">
-                      {r.title || "Untitled experiment"}
-                    </span>
-                  </button>
-                  <button
-                    type="button"
-                    className="sidebar-delete danger"
-                    title="Delete experiment"
-                    aria-label={`Delete experiment ${r.title || "Untitled experiment"}`}
-                    onClick={() => deleteExperiment(r.id)}
-                  >
-                    <svg
-                      width="15"
-                      height="15"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.7"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M3 6h18M9 6V4h6v2M5 6l1 14h12l1-14M10 10v6M14 10v6" />
-                    </svg>
-                  </button>
-                </div>
-              ))}
-            {!recipes.some((r) =>
-              (r.title + r.category)
-                .toLowerCase()
-                .includes(search.toLowerCase()),
-            ) && <p>No experiments found.</p>}
           </nav>
           <div className="navigation-note">
             A little messy.
@@ -724,15 +672,15 @@ export default function App() {
                   <option value="toddler">☁ Toddler planner</option>
                 </select>
               </label>
-              <span className="pill">Your kitchen notebook</span>
+              <button type="button" className="save-now-button" onClick={saveNow}>Save now</button><span className="pill">Autosave on</span>
               {recipe &&
-                !(page === "recipes" && !route.recipeId) &&
+                !(["recipes", "journal"].includes(page) && !route.recipeId) &&
                 !["settings", "templates", "planner"].includes(page) && (
                   <button
                     className="delete-experiment danger"
                     onClick={() => deleteExperiment(recipe.id)}
                   >
-                    Delete experiment
+                    Delete journal
                   </button>
                 )}
             </div>
@@ -848,6 +796,8 @@ export default function App() {
                 </p>
               </section>
             </div>
+          ) : page === "journal" && !route.recipeId ? (
+            <JournalLibrary recipes={recipes} onCreate={create} onOpen={id=>{setFocusPage("");navigate("journal",id);}} onDelete={deleteExperiment} />
           ) : page === "planner" ? (
             <SharedPlanner />
           ) : page === "recipes" && !route.recipeId ? (
@@ -860,7 +810,7 @@ export default function App() {
             <section className="card empty">
               <h2>A fresh page for your next idea.</h2>
               <button className="primary" onClick={create}>
-                Create an experiment
+                Create a journal
               </button>
             </section>
           ) : (
@@ -1045,6 +995,7 @@ export default function App() {
                       </div>
                     </div>
                   )}
+                  <NutritionPanel key={recipe.id + recipe.ingredients + recipe.steps + recipe.servings} recipe={recipe} />
                   <footer className="editor-footer">
                     <span role="status">
                       {status || "Changes save automatically in this browser"}

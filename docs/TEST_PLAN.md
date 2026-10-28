@@ -53,3 +53,10 @@ Use disposable notes and retain the downloaded files as evidence. The last wirin
 - Automated browser coverage and a less monolithic App.tsx, without risking a late broad rewrite.
 
 These items are proposed ownership for the invited teammate, not a claim that they have accepted the work. Owner and teammate should agree scope, credit and prize split directly.
+
+## Latest interaction and nutrition regressions
+
+- [ ] My Journal opens journal cards, Recipe Book opens recipe cards, and no mixed record list remains in the sidebar. Existing journals and recipe copies stay accessible.
+- [ ] Upload a photo with Arrange off: no selection box or resize handle. Enable Arrange, select/move/resize; disable it and confirm controls disappear. Check stickers, Delete/Backspace, Escape and Ctrl/Cmd+Z too.
+- [ ] Autosave survives reload; Save now reports a successful local write. In a disposable test profile, check storage failure feedback. It must not claim success on failure.
+- [ ] Recipe nutrition returns approximate per-serving calories/protein/carbs/fat and assumptions. Missing essential amounts must request details. Ingredient/method/serving edits clear stale results. Test server/provider errors without exposing the key. Keep notebook notes/photos out of nutrition requests.

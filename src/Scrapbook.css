@@ -1126,3 +1126,16 @@
 .toddler-notebook .writing-toolbar,.toddler-notebook .canvas-writing-tools {background:#f4ecfa!important}
 .template-preview.preview-toddler,.template-preview.preview-toddler-notes,.template-preview.preview-toddler-sketch {background-image:url('/backgrounds/toddler-daydreams.svg')!important;background-size:300px auto!important}
 @media(max-width:650px){.toddler-pages{padding:8px}.toddler-notebook .template-writing{margin:6px;padding:10px}}
+.journal-card-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:22px}
+.journal-card {position:relative;padding:18px!important}
+.journal-open {display:block;width:100%;border:0!important;text-align:left;background:transparent!important;color:inherit;padding:10px 30px 10px 8px}
+.journal-delete {position:absolute;right:12px;top:12px;padding:6px!important}
+.journal-search {display:grid;gap:7px;max-width:520px;margin-top:18px}
+.save-now-button {white-space:nowrap}
+.nutrition-panel {margin-top:22px;padding:20px;background:#fffaf2;border:1px solid #e7d1c5;border-radius:16px}
+.nutrition-note {font-size:13px;line-height:1.6;color:#786c70}
+.nutrition-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:15px 0}
+.nutrition-grid>div {display:grid;gap:8px;padding:16px;border-radius:12px;background:#fff;border:1px solid #eadbd4}
+.nutrition-grid strong {font-size:21px;color:#91505a}
+.toddler-theme .nutrition-panel {background:#f6effb;border-color:#ddcbea}
+@media(max-width:650px){.nutrition-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.journal-card-grid{grid-template-columns:1fr}}

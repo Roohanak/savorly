@@ -1,4 +1,5 @@
 const instructions = {
+  nutrition: 'Return only a JSON object with keys calories, proteinG, carbsG, fatG (numbers per serving or null), assumptions (array of short strings), and missing (array of short questions). Estimate from the supplied ingredients, quantities, method and servings. Include all quantities including added oil when stated. If important ingredient quantities, cooking fats or servings are missing or ambiguous, return null for ALL four numbers and list the missing details. Do not silently invent amounts, brands or portion weights. State any minor assumptions. These are approximate model estimates, not database-verified nutrition. Do not give dietary or medical advice. No Markdown or reasoning.', 
   polish: 'Write only a finished recipe using the headings Title, Servings, Ingredients, Method, and Next attempt. Extract ingredients and steps from messy notes when their dedicated fields are empty. Preserve stated quantities. Mark missing amounts as "amount not recorded". Do not invent temperatures, heat levels, times, quantities or tested results. If heat or time was not recorded, say so; never insert medium heat or a cooking duration. Keep improvement suggestions under Next attempt, separate from the recorded method. Keep the next-attempt suggestion to one sentence.',
   compare: 'Write only a concise comparison of recorded attempts: What changed, What happened, and Next experiment. Distinguish reported observations from suggestions. If there are too few attempts, say what to record next.',
   swaps: 'Write only 2–3 optional ingredient substitutions with likely effects on flavor and texture. Mention relevant allergen changes. Do not invent nutritional or medical benefits.'
@@ -14,6 +15,11 @@ export function buildRequest(action, recipe, model) {
     method: recipe.steps || '',
     notes: recipe.notes || '',
     attempts: (Array.isArray(recipe.attempts) ? recipe.attempts : []).map(({date,changes,result,rating}) => ({date,changes,result,rating}))
+  }
+  if (action === 'nutrition') {
+    if (typeof recipe.ingredients !== 'string' || !recipe.ingredients.trim() || !Number.isFinite(recipe.servings) || recipe.servings <= 0) throw new Error('Ingredients and valid servings are required');
+    delete cookingNotes.notes;
+    delete cookingNotes.attempts;
   }
   return {
     model,
