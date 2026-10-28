@@ -778,7 +778,7 @@ export default function App() {
             </div>
           )}
           {page === "templates" ? (
-            <TemplateLibrary onUse={applyTemplate} />
+            <TemplateLibrary onUse={applyTemplate} toddler={appearance === "toddler"} />
           ) : page === "settings" ? (
             <div className="settings-layout">
               <section className="card settings-card">

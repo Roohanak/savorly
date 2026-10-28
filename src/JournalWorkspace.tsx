@@ -184,10 +184,10 @@ export default function JournalWorkspace({
   );
 }
 
-export function TemplateLibrary({ onUse }: { onUse: (id: string) => void }) {
+export function TemplateLibrary({ onUse, toddler = false }: { onUse: (id: string) => void; toddler?: boolean }) {
   return (
     <div className="template-grid">
-      {templates.map((t) => (
+      {templates.filter((t) => t.id.startsWith("toddler") === toddler).map((t) => (
         <article className="template-card card" key={t.id}>
           <div
             className={`template-preview preview-${t.id}`}
