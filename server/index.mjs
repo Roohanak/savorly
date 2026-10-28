@@ -1,3 +1,4 @@
+import { missingIngredientAmounts } from '../src/ingredientAmounts.ts'
 import { createServer } from 'node:http'
 import { buildRequest, finalAnswer } from './assistant.mjs'
 
@@ -10,8 +11,12 @@ createServer(async (req,res) => {
   try {
     let body=''
     for await (const chunk of req) { body+=chunk; if(body.length>100000) return send(413,{error:'Recipe too large.'}) }
-    const {action,recipe}=JSON.parse(body)
-    request=buildRequest(action,recipe,process.env.AI_MODEL)
+    const {action,recipe,question}=JSON.parse(body)
+    request=buildRequest(action,recipe,process.env.AI_MODEL,question)
+    if (action === 'nutrition') {
+      const missing = missingIngredientAmounts(recipe.ingredients)
+      if (missing.length) return send(200,{text:JSON.stringify({calories:null,proteinG:null,carbsG:null,fatG:null,assumptions:[],missing})})
+    }
   } catch { return send(400,{error:'Invalid recipe request.'}) }
   try {
     const response=await fetch(process.env.AI_BASE_URL.replace(/\/$/,'')+'/chat/completions',{

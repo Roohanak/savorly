@@ -10,7 +10,7 @@ export function parseNutrition(text: string): NutritionEstimate {
   for (const key of ["assumptions", "missing"] as const)
     if (!Array.isArray(data[key]) || data[key].length > 15 || !data[key].every((v: unknown)=>typeof v === "string" && v.length <= 1000)) throw Error("The nutrition response is incomplete. Try again.");
   if (data.missing.length || [data.calories,data.proteinG,data.carbsG,data.fatG].some(v=>v===null)) {
-    return {calories:null,proteinG:null,carbsG:null,fatG:null,assumptions:data.assumptions,missing:data.missing.length?data.missing:["Add ingredient quantities and servings before estimating."]};
+    return {calories:null,proteinG:null,carbsG:null,fatG:null,assumptions:[],missing:data.missing.length?data.missing:["Add ingredient quantities and servings before estimating."]};
   }
   return {calories:data.calories,proteinG:data.proteinG,carbsG:data.carbsG,fatG:data.fatG,assumptions:data.assumptions,missing:[]};
 }

@@ -137,3 +137,9 @@ My Journal opens searchable journal cards; Recipe Book keeps its own recipe gall
 Canvas photos and stickers are locked by default. Turn on Arrange photos & stickers to select, move, resize or rotate; turn it off to hide selection controls. Use Delete/Backspace on a selected photo/sticker, Escape to deselect, and session-local undo/redo for page edits.
 
 Recipes have Estimate calories & macros. It sends only the recipe title, base servings, ingredients and method to the configured AI provider. Results are approximate model estimates, not verified food-database calculations. Missing essential quantities suppress numeric results and prompt for more details. Editing ingredients, method or base servings clears the estimate. One live provider request with synthetic ingredients succeeded; physical-device and browser UI testing remain partner tasks.
+
+### Recipe vs Companion responsibilities
+
+Recipe makes is the yield for the entered ingredient amounts. Scale batch to previews a different batch size; Nutrition uses exactly that batch size and the same scaled ingredient text. Scaling a whole batch changes total food, not normally nutrition per portion. To divide the unchanged original food into five portions, set Recipe makes to five. Nutrition needs ingredient amounts as well as servings; it does not invent missing quantities or report assumptions when no estimate is possible.
+
+AI Companion has Ask a cooking question for technique, swaps and suggested recipe amounts. Suggestions are untested and do not automatically change the saved recipe. Nutrition has a link that prefills a question about missing amounts for the selected batch size. Numeric calories/macros stay in the recipe Nutrition panel to avoid competing estimates. Question context excludes separate notebook pages; it uses recipe ingredients, method, notes and attempts.

@@ -1139,3 +1139,7 @@
 .nutrition-grid strong {font-size:21px;color:#91505a}
 .toddler-theme .nutrition-panel {background:#f6effb;border-color:#ddcbea}
 @media(max-width:650px){.nutrition-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.journal-card-grid{grid-template-columns:1fr}}
+.companion-question {display:grid;gap:12px;margin:18px 0;padding:18px;border-radius:16px;border:1px solid #e3d4cc;background:#fffdf9}
+.companion-question label {display:grid;gap:8px}
+.companion-question textarea {min-height:110px}
+.companion-question small {line-height:1.5;color:#766b70}

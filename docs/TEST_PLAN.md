@@ -60,3 +60,6 @@ These items are proposed ownership for the invited teammate, not a claim that th
 - [ ] Upload a photo with Arrange off: no selection box or resize handle. Enable Arrange, select/move/resize; disable it and confirm controls disappear. Check stickers, Delete/Backspace, Escape and Ctrl/Cmd+Z too.
 - [ ] Autosave survives reload; Save now reports a successful local write. In a disposable test profile, check storage failure feedback. It must not claim success on failure.
 - [ ] Recipe nutrition returns approximate per-serving calories/protein/carbs/fat and assumptions. Missing essential amounts must request details. Ingredient/method/serving edits clear stale results. Test server/provider errors without exposing the key. Keep notebook notes/photos out of nutrition requests.
+
+- [ ] Nutrition agrees with the displayed batch: enter a recipe that makes five, check that five is shown, switch to another recipe and confirm its yield loads. Scale all quantities and confirm per-serving estimates stay broadly consistent. Missing amounts must not produce a serving-size assumption or invented calories.
+- [ ] Companion answers the typed cooking question, labels suggested quantities as untested, and leaves the saved recipe unchanged. The nutrition missing-details link should prefill the chosen batch size. Numeric nutrition belongs to the recipe panel.

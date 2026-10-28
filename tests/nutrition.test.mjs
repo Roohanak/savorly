@@ -21,3 +21,37 @@ test('nutrition request excludes private journal notes and attempts and requires
  assert.throws(()=>buildRequest('nutrition',{...recipe,ingredients:''},'test-model'));
  assert.throws(()=>buildRequest('nutrition',{...recipe,servings:0},'test-model'));
 });
+
+test('nutrition uses exactly five servings and the same scaled batch as the preview',async()=>{
+ const {scaleIngredients}=await import('../src/recipeScaling.ts');
+ const ingredients=scaleIngredients('2 eggs\n200 ml milk\n30 g sugar',5/2);
+ assert.equal(ingredients,'5 eggs\n500 ml milk\n75 g sugar');
+ const request=buildRequest('nutrition',{title:'Custard',servings:5,ingredients,steps:'Bake'},'test');
+ const input=JSON.parse(request.messages[1].content);
+ assert.equal(input.servings,5);assert.equal(input.ingredients,ingredients);
+ assert.match(request.messages[0].content,/EXACT stated servings/);
+});
+test('incomplete nutrition does not display an invented half-batch assumption',()=>{
+ const result=parseNutrition(JSON.stringify({...estimate,missing:['Amount of milk?'],assumptions:['Half the recipe is one serving']}));
+ assert.deepEqual(result.assumptions,[]);assert.equal(result.calories,null);
+});
+test('companion answers a supplied question and separates cooking suggestions from nutrition',()=>{
+ const recipe={title:'Custard',servings:5,ingredients:'eggs and milk',steps:''};
+ const request=buildRequest('question',recipe,'test','Suggest amounts for five servings');
+ assert.equal(JSON.parse(request.messages[1].content).question,'Suggest amounts for five servings');
+ assert.match(request.messages[0].content,/untested suggestion/);
+ assert.match(request.messages[0].content,/Nutrition tool/);
+ assert.throws(()=>buildRequest('question',recipe,'test',''));
+});
+
+test('batch scaling keeps section headings and scales quantified bullet ingredients',async()=>{
+ const {scaleIngredients}=await import('../src/recipeScaling.ts');
+ assert.equal(scaleIngredients('For custard:\n- 2 eggs\n* 1/2 cup milk\nsugar (amount missing)',2),'For custard:\n- 4 eggs\n* 1 cup milk\nsugar (amount missing)');
+});
+
+test('unquantified custard is blocked before AI, including pasted headings and bullets',async()=>{
+ const {missingIngredientAmounts}=await import('../src/ingredientAmounts.ts');
+ assert.equal(missingIngredientAmounts('white sugar; whole eggs; egg yolks; sugar; whole milk; sweetened condensed milk').length,6);
+ assert.equal(missingIngredientAmounts('For the Caramel:\n- white sugar\nFor the Custard:\n- whole eggs').length,2);
+ assert.deepEqual(missingIngredientAmounts('3 eggs\n500 ml milk\n1/2 cup sugar\nSalt to taste'),[]);
+});

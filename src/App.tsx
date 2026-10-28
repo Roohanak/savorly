@@ -1,3 +1,4 @@
+import { scaleIngredients } from "./recipeScaling";
 import JournalLibrary from "./JournalLibrary";
 import NutritionPanel from "./NutritionPanel";
 import PdfExportButton from "./PdfExportButton";
@@ -138,23 +139,6 @@ function load(): Recipe[] {
     return [sample];
   }
 }
-function scaleIngredients(text: string, ratio: number) {
-  return text
-    .split("\n")
-    .map((line) =>
-      line.replace(
-        /^(\s*)(\d+\s+\d+\/\d+|\d+\/\d+|\d*\.?\d+)(?=\s|$)/,
-        (_all, space: string, number: string) => {
-          const amount = number.split(/\s+/).reduce((sum, part) => {
-            const [a, b] = part.split("/").map(Number);
-            return sum + (b ? a / b : a);
-          }, 0);
-          return space + String(Math.round(amount * ratio * 100) / 100);
-        },
-      ),
-    )
-    .join("\n");
-}
 export default function App() {
   const [appearance, setAppearance] = useState(() => {
     try {
@@ -223,7 +207,8 @@ export default function App() {
 
 
   const [status, setStatus] = useState("");
-  const [target, setTarget] = useState(2);
+  const [servingPreview, setServingPreview] = useState<{id:string;base:number;count:number}|null>(null);
+  const [question, setQuestion] = useState("");
   const [changes, setChanges] = useState("");
   const [result, setResult] = useState("");
   const [rating, setRating] = useState(4);
@@ -242,6 +227,9 @@ export default function App() {
   const [cook, setCook] = useState(false);
   const [step, setStep] = useState(0);
   const recipe = recipes.find((r) => r.id === selected);
+  const target = recipe && servingPreview?.id === recipe.id && servingPreview.base === recipe.servings ? servingPreview.count : recipe?.servings ?? 2;
+  function setTarget(count: number) { if (recipe) setServingPreview({id:recipe.id,base:recipe.servings,count}); }
+
   function setRecipes(next: Recipe[] | ((list: Recipe[]) => Recipe[])) {
     const updated =
       typeof next === "function" ? next(recipesRef.current) : next;
@@ -272,6 +260,7 @@ export default function App() {
     setAiError("");
     setOutput("");
     setStep(0);
+    setQuestion("");
     setChanges("");
     setResult("");
     setDraftPhotoIds([]);
@@ -512,7 +501,7 @@ export default function App() {
     navigate("recipes", "");
     setStatus("Saved a new recipe. The original journal is unchanged.");
   }
-  async function ask(action: string) {
+  async function ask(action: string, cookingQuestion = "") {
     if (!recipe) return;
     aiRequest.current?.abort();
     const controller = new AbortController();
@@ -528,10 +517,11 @@ export default function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           action,
+          question: cookingQuestion,
           recipe: {
             ...source,
             journalPages: undefined,
-            notes: [
+            notes: action === "question" ? source.notes : [
               source.notes,
               ...pagesFor(source).map(
                 (p) =>
@@ -912,7 +902,7 @@ export default function App() {
                       </small>
                     </label>
                     <label>
-                      Base servings
+                      Recipe makes (servings)
                       <input
                         type="number"
                         min="1"
@@ -966,7 +956,7 @@ export default function App() {
                       </label>
                       <div className="scaling">
                         <label>
-                          Adjust servings
+                          Scale batch to (servings)
                           <input
                             type="number"
                             min="1"
@@ -989,13 +979,12 @@ export default function App() {
                           ) || "Add ingredients above to scale them here."}
                         </pre>
                         <small>
-                          Preview only. Check seasonings and cooking time
-                          yourself.
+                          Batch preview scales recorded amounts. Per-serving nutrition should stay similar when the whole recipe is scaled. Check seasonings and cooking time yourself.
                         </small>
                       </div>
                     </div>
                   )}
-                  <NutritionPanel key={recipe.id + recipe.ingredients + recipe.steps + recipe.servings} recipe={recipe} />
+                  <NutritionPanel key={recipe.id + recipe.ingredients + recipe.steps + recipe.servings + ":" + target} recipe={{...recipe,servings:target,ingredients:scaleIngredients(recipe.ingredients,target / recipe.servings)}} onOpenCompanion={() => {setQuestion(`Suggest ingredient quantities for ${recipe.title} to make ${target} servings. Label the amounts as an untested suggestion and ask for any important missing details.`); navigate("companion", recipe.id);}} />
                   <footer className="editor-footer">
                     <span role="status">
                       {status || "Changes save automatically in this browser"}
@@ -1143,7 +1132,12 @@ export default function App() {
                     <div className="assistant-symbol">✧</div>
                     <p className="eyebrow">A LITTLE HELP IN THE KITCHEN</p>
                     <h2>Your kitchen companion.</h2>
-                    <p>Give your ideas a little room to grow.</p>
+                    <p>Ask about technique, substitutions or recipe ideas. For calories and macros, use Nutrition in the recipe editor after recording ingredient amounts.</p>
+                    <form className="companion-question" onSubmit={e=>{e.preventDefault(); if(question.trim()) void ask("question",question.trim());}}>
+                      <label>Ask a cooking question<textarea value={question} onChange={e=>setQuestion(e.target.value)} maxLength={2000} placeholder="Why is my batter thick? Can I swap milk? Help me suggest quantities for 5 servings…" required /></label>
+                      <small>Uses this recipe's typed cooking notes and attempts. Suggestions are separate from your saved recipe; review them before editing.</small>
+                      <button className="primary" type="submit" disabled={busy || !question.trim()}>Ask companion</button>
+                    </form>
                     <div className="assistant-actions">
                       <button disabled={busy} onClick={() => ask("polish")}>
                         <strong>✦ Polish my recipe</strong>

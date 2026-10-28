@@ -17,10 +17,10 @@ Local features work without credentials. For AI, copy `.env.example` to `.env`, 
 - Recipe category/subcategory dropdowns, search, new recipe, servings preview and cook mode.
 - Linked weekly notebook/meal planner, grocery sticky notes and checkable shopping lists.
 - Local saving, complete backups and recoverable experiment deletion. Optional Supabase snapshots are prepared but live cross-device behavior is unverified.
-- AI recipe drafts, attempt comparisons and ingredient-swap suggestions through Nebius/NVIDIA. Open-ended cooking questions are still a remaining improvement.
+- AI recipe drafts, attempt comparisons and ingredient-swap suggestions through Nebius/NVIDIA. A direct cooking-question box is now implemented; independent response-quality testing remains.
 - Recipe PDF, selected-page PDF and all-pages PDF exports. The latest journal export wiring was fixed in commit `78eb2cf`, but a newly downloaded PDF has **not yet been visually verified** after that fix.
 
-Current automated checks: 36 tests, lint and production build passed. These do not verify physical iPad/Pencil behavior, live Supabase, deployed AI or visual PDF fidelity.
+Current automated checks: 41 tests, lint and production build passed. These do not verify physical iPad/Pencil behavior, live Supabase, deployed AI or visual PDF fidelity.
 
 ## Pick a manageable piece
 
@@ -29,7 +29,7 @@ These are proposed tasks, not assigned commitments. Tell Roohanak what you can c
 1. **PDF correctness first.** Follow the P0 PDF checklist in TEST_PLAN.md. Replace text in the same page, export immediately, and compare the actual file with the app. Check selected-page vs all-pages downloads, theme propagation to older pages, blank fields, long notes, images/stickers/ink and page breaks. Do not mark this complete from unit tests alone.
 2. **End-to-end and device testing.** Check pen, eraser, photos, sticker movement/rotation/resize, Delete/Escape/undo/redo, recipes/search, planner and groceries on desktop, phone and a physical iPad/Pencil if available. Fix reproducible high-impact issues and smooth confusing interactions.
 3. **Saving and recovery.** Verify reloads, backup/restore and deleted-item recovery in a separate test profile. Confirm text, media, ink, stickers and planner state survive. Never restore over the owner's only journal.
-4. **AI usefulness.** Add an explicit question flow for “why is my batter thick?”, “can I swap this ingredient?” and measurement/serving questions. Preserve supplied quantities, identify missing details and keep model reasoning out of displayed answers. Do not promise automatic photo/handwriting recognition.
+4. **AI usefulness.** Test and improve the explicit question flow for “why is my batter thick?”, “can I swap this ingredient?” and measurement/serving questions. Preserve supplied quantities, identify missing details and keep model reasoning out of displayed answers. Do not promise automatic photo/handwriting recognition.
 5. **Cloud and deployment, if you can cover it.** Configure and test Supabase account isolation and laptop/iPad restoration. Current support is manual snapshots, not conflict-safe live editing. Add a conflict strategy before promising automatic sync. For hosting, keep the key server-side and add authentication, usage limits and production API routing.
 6. **Demo together.** Help choose a stable demo flow, record the video and polish the submission. Confirm current official requirements, asset rights and license before publishing.
 
@@ -42,3 +42,5 @@ See TEAM_MESSAGE.md for a casual message and TEST_PLAN.md for acceptance checks.
 ## Latest usability changes
 
 My Journal now opens a searchable journal-card library; the mixed sidebar list is removed. New experiment is now New journal. Autosave remains enabled with an explicit Save now button/status. Photo/sticker Arrange is off by default, so uploads have no resize outline until enabled. Recipe nutrition estimates are implemented with missing-quantity handling and a successful synthetic live-provider request. Please test these flows on desktop/iPad, including changing recipe quantities after an estimate. Nutrition is approximate and is not a validated nutrient database.
+
+Nutrition and scaling now share the same batch quantities and exact servings. Verify a five-serving recipe, switching recipes, changing base yield, missing ingredient amounts, and a scaled batch. Companion answers cooking questions and can suggest untested quantities; calorie/macronutrient estimates belong to the recipe Nutrition panel.

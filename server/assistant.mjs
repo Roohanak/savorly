@@ -1,11 +1,12 @@
 const instructions = {
-  nutrition: 'Return only a JSON object with keys calories, proteinG, carbsG, fatG (numbers per serving or null), assumptions (array of short strings), and missing (array of short questions). Estimate from the supplied ingredients, quantities, method and servings. Include all quantities including added oil when stated. If important ingredient quantities, cooking fats or servings are missing or ambiguous, return null for ALL four numbers and list the missing details. Do not silently invent amounts, brands or portion weights. State any minor assumptions. These are approximate model estimates, not database-verified nutrition. Do not give dietary or medical advice. No Markdown or reasoning.',
+  question: 'Answer the specific cooking question using the supplied recipe as context. Be concise and practical. Separate recorded facts from suggestions. Ask for missing quantities or details when necessary. If asked to suggest a recipe or quantities, label them as an untested suggestion, never as previously recorded or tested. For calorie or macro calculations direct the user to the recipe Nutrition tool with quantities and servings; do not give competing numeric nutrition estimates here. Do not change saved content.',
+  nutrition: 'Return only a JSON object with keys calories, proteinG, carbsG, fatG (numbers per serving or null), assumptions (array of short strings), and missing (array of short questions). Estimate from the supplied ingredients, quantities, method and EXACT stated servings. Never estimate or override the servings count: servings is authoritative. These ingredients are already scaled to that batch size. Divide the full batch nutrition by the stated servings. Do not include serving/portion assumptions; only ingredient/brand assumptions. Include all quantities including added oil when stated. If important ingredient quantities, cooking fats or servings are missing or ambiguous, return null for ALL four numbers and list the missing details. Do not silently invent amounts, brands or portion weights. State any minor assumptions. These are approximate model estimates, not database-verified nutrition. Do not give dietary or medical advice. No Markdown or reasoning.',
   polish: 'Write only a finished recipe using the headings Title, Servings, Ingredients, Method, and Next attempt. Extract ingredients and steps from messy notes when their dedicated fields are empty. Preserve stated quantities. Mark missing amounts as "amount not recorded". Do not invent temperatures, heat levels, times, quantities or tested results. If heat or time was not recorded, say so; never insert medium heat or a cooking duration. Keep improvement suggestions under Next attempt, separate from the recorded method. Keep the next-attempt suggestion to one sentence.',
   compare: 'Write only a concise comparison of recorded attempts: What changed, What happened, and Next experiment. Distinguish reported observations from suggestions. If there are too few attempts, say what to record next.',
   swaps: 'Write only 2–3 optional ingredient substitutions with likely effects on flavor and texture. Mention relevant allergen changes. Do not invent nutritional or medical benefits.'
 }
 
-export function buildRequest(action, recipe, model) {
+export function buildRequest(action, recipe, model, question = "") {
   if (!Object.hasOwn(instructions, action) || !recipe || typeof recipe.title !== 'string') throw new Error('Invalid request')
   // Send cooking content, not database IDs, photo references or UI metadata.
   const cookingNotes = {
@@ -15,6 +16,10 @@ export function buildRequest(action, recipe, model) {
     method: recipe.steps || '',
     notes: recipe.notes || '',
     attempts: (Array.isArray(recipe.attempts) ? recipe.attempts : []).map(({date,changes,result,rating}) => ({date,changes,result,rating}))
+  }
+  if (action === 'question') {
+    if (typeof question !== 'string' || !question.trim() || question.length > 2000) throw new Error('A cooking question is required');
+    cookingNotes.question = question.trim();
   }
   if (action === 'nutrition') {
     if (typeof recipe.ingredients !== 'string' || !recipe.ingredients.trim() || !Number.isFinite(recipe.servings) || recipe.servings <= 0) throw new Error('Ingredients and valid servings are required');
