@@ -31,6 +31,17 @@ class Paper {
   ctx: CanvasRenderingContext2D;
   y = 85;
   number = 1;
+  pageColor = "#fffdf8";
+  accent = "#a73e4b";
+  wallpaper: HTMLImageElement | null = null;
+  async decorate(page: NotebookPage) {
+    const design = templateDesign(page.template);
+    this.pageColor = page.color ?? design.color;
+    this.accent = design.accent;
+    this.wallpaper = page.template.startsWith("toddler")
+      ? await loadImage("/backgrounds/toddler-daydreams.svg") : null;
+    this.clear();
+  }
   constructor(pdf: PdfType) {
     this.pdf = pdf;
     this.canvas = document.createElement("canvas");
@@ -42,8 +53,16 @@ class Paper {
     this.clear();
   }
   clear() {
-    this.ctx.fillStyle = "#fffdf8";
+    this.ctx.fillStyle = this.pageColor;
     this.ctx.fillRect(0, 0, 1190, 1684);
+    if (this.wallpaper) {
+      const c = this.ctx;
+      c.save();
+      c.globalAlpha = 0.32;
+      for (let y = 0; y < 1684; y += 640)
+        for (let x = 0; x < 1190; x += 720) c.drawImage(this.wallpaper, x, y, 720, 640);
+      c.restore();
+    }
     this.y = 85;
   }
   flush() {
@@ -103,7 +122,47 @@ class Paper {
   }
   heading(title: string) {
     this.y += 15;
-    this.text(title, 40, "#a73e4b", true);
+    this.text(title, 40, this.accent, true);
+  }
+  field(label: string, value: string) {
+    const c = this.ctx;
+    c.font = "400 27px Arial";
+    const lines: string[] = [];
+    for (const paragraph of value.split("\n")) {
+      let line = "";
+      for (const char of paragraph) {
+        if (c.measureText(line + char).width > 1010) { lines.push(line); line = ""; }
+        line += char;
+      }
+      lines.push(line);
+    }
+    if (!value.trim()) lines.splice(0, lines.length, "", "");
+    let index = 0;
+    while (index < lines.length) {
+      this.room(160);
+      const capacity = Math.max(1, Math.floor((1530 - this.y - 85) / 41));
+      const chunk = lines.slice(index, index + capacity);
+      const height = 80 + chunk.length * 41;
+      c.fillStyle = "#fffdfbf2";
+      c.fillRect(65, this.y - 25, 1060, height);
+      c.strokeStyle = this.accent;
+      c.lineWidth = 1;
+      c.strokeRect(65, this.y - 25, 1060, height);
+      this.text(label + (index ? " (continued)" : ""), 32, this.accent, true);
+      c.font = "400 27px Arial";
+      for (const line of chunk) {
+        c.fillStyle = "#513e38";
+        c.fillText(line, 80, this.y);
+        if (!value.trim()) {
+          c.strokeStyle = "#dcd3df";
+          c.beginPath(); c.moveTo(85,this.y + 5); c.lineTo(1100,this.y + 5); c.stroke();
+        }
+        this.y += 41;
+      }
+      this.y += 32;
+      index += chunk.length;
+      if (index < lines.length) this.next();
+    }
   }
   async photo(id: string) {
     const p = await getPhoto(id);
@@ -271,18 +330,17 @@ export async function exportNotebook(
   }
   for (const [i, page] of pages.entries()) {
     if (i) p.next();
+    await p.decorate(page);
     p.text(recipe.title || "Kitchen notebook", 25, "#9b6d63");
-    p.text(page.title || `Page ${i + 1}`, 50, "#a73e4b", true);
+    p.text(page.title || `Page ${i + 1}`, 50, p.accent, true);
+    p.text(templateDesign(page.template).format, 25, p.accent);
     const design = templateDesign(page.template);
     for (const field of design.fields) {
       const value = page.fields?.[field.id];
-      if (value?.trim()) {
-        p.heading(field.label);
-        p.text(value);
-      }
+      if (page.template !== "weekly" || value?.trim()) p.field(field.label, value ?? "");
     }
     if (page.text.trim()) {
-      p.heading("Notebook notes");
+      p.heading(page.template.startsWith("toddler") ? "Little notes & happy moments" : "Notebook notes");
       p.text(page.text);
     }
     if (page.template === "weekly") {
@@ -315,7 +373,7 @@ export async function exportNotebook(
       page.photoIds?.length ||
       page.stickers?.length
     ) {
-      p.heading("Sketches, photos & stickers");
+      p.heading(page.template.startsWith("toddler") ? "Little doodles & keepsakes" : "Sketches, photos & stickers");
       await p.sketch(page);
     }
     if (page.strokes.some((s) => s.region !== "pad")) {

@@ -123,3 +123,5 @@ Each notebook page also has Save this page PDF beside its page title. This expor
 
 ### Toddler notebook templates
 Templates includes Toddler day planner (meals, naps, play, mood and tomorrow), Toddler memory notes, and Toddler sketchbook. Their artwork and fields apply independently of the app appearance. They use the same pen/eraser, photo canvas, draggable/resizable/rotatable stickers and per-page/all-notebook PDF exports. The sticker tray includes baby, teddy, cloud, rainbow, blocks and bottle designs. Outside text fields, Ctrl/Cmd+Z undoes the latest page edit, Ctrl/Cmd+Shift+Z or Ctrl+Y redoes it; Delete/Backspace removes a selected sticker and Escape deselects. History is limited to 30 edits per page while that journal workspace stays open; text fields retain browser-native undo.
+
+PDF notebook copies preserve each page's chosen color and template headings, including empty field cards. Toddler pages include their baby wallpaper and lavender accents. Long field values continue onto additional pages; the export uses a printable A4 layout rather than capturing browser controls.
