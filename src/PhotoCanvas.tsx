@@ -136,6 +136,7 @@ export default function PhotoCanvas({
     e.preventDefault();
     e.stopPropagation();
     setSelected(id);
+    (e.currentTarget.closest(".canvas-photo") as HTMLElement | null)?.focus({ preventScroll: true });
     const p = position(id);
     gesture.current = {
       id,
