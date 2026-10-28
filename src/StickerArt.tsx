@@ -14,6 +14,12 @@ export default function StickerArt({ kind }: { kind: StickerKind }) {
         strokeLinecap="round"
         strokeLinejoin="round"
       >
+        {kind === "baby" && <><path d="M24 75q26-30 52 0v17H24z" fill="#cfc0e9"/><circle cx="50" cy="42" r="30" fill="#ffe0c4"/><path d="M45 13q18-18 16-1M38 41h1m22 0h1M44 54q6 7 12 0"/><ellipse cx="30" cy="51" rx="5" ry="3" fill="#f1afbc" stroke="none"/><ellipse cx="70" cy="51" rx="5" ry="3" fill="#f1afbc" stroke="none"/></>}
+        {kind === "teddy" && <><circle cx="25" cy="24" r="15" fill="#e6c5a1"/><circle cx="75" cy="24" r="15" fill="#e6c5a1"/><ellipse cx="50" cy="70" rx="26" ry="25" fill="#e6c5a1"/><circle cx="50" cy="40" r="30" fill="#edd4b8"/><ellipse cx="50" cy="49" rx="14" ry="10" fill="#fff1db"/><path d="M36 36h1m26 0h1M46 46l4 4 4-4m-4 4v5"/><path d="m42 71 8 7 8-7" stroke="#c185a0"/></>}
+        {kind === "cloud" && <><path d="M20 70C-2 64 6 37 27 38c-2-34 48-38 51-3 29-2 32 35 6 35z" fill="#ecf2ff"/><path d="M37 51h1m25 0h1M44 62q7 8 14 0"/></>}
+        {kind === "rainbow" && <><path d="M12 78V55a38 38 0 0 1 76 0v23" stroke="#e8a6b8" strokeWidth="12"/><path d="M24 78V55a26 26 0 0 1 52 0v23" stroke="#f1d692" strokeWidth="10"/><path d="M35 78V55a15 15 0 0 1 30 0v23" stroke="#b5d6c9" strokeWidth="10"/></>}
+        {kind === "blocks" && <><rect x="9" y="49" width="38" height="38" rx="5" fill="#edc0cd"/><rect x="51" y="49" width="38" height="38" rx="5" fill="#cfc2ea"/><rect x="30" y="8" width="38" height="38" rx="5" fill="#f4dda6"/><path d="m40 35 9-17 9 17m-14-6h10M20 77V59h9q12 4 0 9 12 4 0 9zM77 60q-17-5-17 8t17 8"/></>}
+        {kind === "bottle" && <><path d="M40 22v-8q10-15 20 0v8" fill="#eed5c1"/><rect x="30" y="22" width="40" height="12" rx="5" fill="#cabbe6"/><path d="M34 34h32l8 15v33q0 9-10 9H36q-10 0-10-9V49z" fill="#fff5df"/><path d="M28 59h44M59 47h10M59 70h10M59 80h10"/></>}
         {kind === "pasta" && (
           <>
             <ellipse cx="50" cy="56" rx="35" ry="26" fill="#fff8e8" />

@@ -1110,3 +1110,19 @@
 .sectioned-app.toddler-theme .canvas-writing-tools,.sectioned-app.toddler-theme .writing-toolbar {background:#f8f1fc;border-color:#dfcde8}
 .sectioned-app.toddler-theme .writing-toolbar button[aria-pressed='true'],.sectioned-app.toddler-theme .canvas-writing-tools button[aria-pressed='true'] {background:#9672ad;border-color:#9672ad;color:white}
 @media(max-width:700px){.theme-picker>span{display:none}.theme-picker select{max-width:180px}.sectioned-app.toddler-theme main{background-size:500px auto}}
+/* Toddler templates carry their own design under any app appearance. */
+.toddler-pages {background:#fff9f3 url('/backgrounds/toddler-daydreams.svg') center top/650px auto repeat;padding:20px;border-radius:24px;border:1px solid #e4d2ec}
+.toddler-pages .notebook-heading,.toddler-pages .notebook-page-title {background:#fffcf8ed;border-radius:16px;padding:14px}
+.toddler-pages .page-strip button[aria-pressed='true'] {background:#e5d8f0;color:#714a86;border-color:#c7add9}
+.sectioned-app .toddler-notebook {border:2px solid #dac5e6;border-radius:22px;overflow:hidden;background:#fffdfb}
+.toddler-notebook .notebook-paper {background-image:url('/backgrounds/toddler-daydreams.svg');background-size:720px auto}
+.toddler-notebook .template-writing {background:#fffdfbeF;border-radius:18px;margin:14px;padding:20px}
+.toddler-notebook .page-letterhead strong,.toddler-notebook .template-field>span,.toddler-notebook .drawing-heading h3 {color:#916092!important;font-family:Gaegu,cursive}
+.toddler-notebook .template-field {background:#f5edfc;border-color:#ddcaeb;border-radius:18px;padding:14px}
+.toddler-notebook .template-field:nth-child(3n+2) {background:#fff3d8}
+.toddler-notebook .template-field:nth-child(3n) {background:#eaf7f0}
+.toddler-notebook .template-field textarea {background:#fffdfbdd;border-radius:10px}
+.toddler-notebook .drawing-panel {background:#f8f1fc!important;border-radius:18px}
+.toddler-notebook .writing-toolbar,.toddler-notebook .canvas-writing-tools {background:#f4ecfa!important}
+.template-preview.preview-toddler,.template-preview.preview-toddler-notes,.template-preview.preview-toddler-sketch {background-image:url('/backgrounds/toddler-daydreams.svg')!important;background-size:300px auto!important}
+@media(max-width:650px){.toddler-pages{padding:8px}.toddler-notebook .template-writing{margin:6px;padding:10px}}

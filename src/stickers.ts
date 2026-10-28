@@ -1,4 +1,5 @@
 export const stickerKinds = [
+  "baby", "teddy", "cloud", "rainbow", "blocks", "bottle",
   "pasta",
   "strawberry",
   "mushroom",

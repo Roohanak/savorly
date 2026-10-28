@@ -34,9 +34,9 @@ test('malformed or unsafe handwriting data cannot replace a journal',()=> {
   assert.throws(()=>parseBackup([{...recipe,journalPages:[{...page,strokes:[bad]}]}]),/valid/)
 })
 test('templates have distinct colors and working page formats',()=> {
-  assert.equal(templates.length,7)
-  assert.equal(new Set(templates.map(t=>templateDesign(t.id).color)).size,7)
-  assert.equal(new Set(templates.map(t=>templateDesign(t.id).format)).size,7)
+  assert.equal(templates.length,10)
+  assert.equal(new Set(templates.map(t=>templateDesign(t.id).color)).size,templates.length)
+  assert.equal(new Set(templates.map(t=>templateDesign(t.id).format)).size,templates.length)
   assert.equal(templateDesign('weekly').fields.filter(f=>!f.wide).length,7)
 })
 test('page colors and typed template fields survive a backup round trip',()=> {
@@ -52,3 +52,11 @@ test('ID generation works when randomUUID is unavailable on a local-network page
   assert.match(id,/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/)
   assert.notEqual(id,newId(httpCrypto))
 })
+
+test('toddler pages keep their planner fields, ink and baby stickers in backups',()=>{
+  const toddlerPages=['toddler','toddler-notes','toddler-sketch'].map(id=>({...newNotebookPage(id),text:'A lovely day',strokes:[stroke],stickers:[{id:'baby-'+id,kind:'baby',x:10,y:10,size:12,rotation:25}]}));
+  toddlerPages[0].fields={sleep:'Nap at 1pm',meals:'Lunch at noon'};
+  const data={version:2,recipes:[{...recipe,journalPages:toddlerPages}],photos:[]};
+  assert.deepEqual(parseBackup(JSON.parse(JSON.stringify(data))),data);
+  assert.equal(newNotebookPage('unknown-template').template,'blank');
+});

@@ -31,10 +31,10 @@ export function StickerPicker({
       <button type="button" onClick={() => setOpen(!open)} aria-expanded={open}>
         ✿ Stickers
       </button>
-      <span className="sticker-hint">26 little things, just for you.</span>
+      <span className="sticker-hint">{stickerKinds.length} little things, just for you.</span>
       {open && (
         <div className="sticker-picker" aria-label="Sticker choices">
-          {stickerKinds.map((kind) => (
+          {[...stickerKinds].sort((a, b) => page.template.startsWith("toddler") ? Number(!["baby","teddy","cloud","rainbow","blocks","bottle"].includes(a)) - Number(!["baby","teddy","cloud","rainbow","blocks","bottle"].includes(b)) : 0).map((kind) => (
             <button
               type="button"
               key={kind}

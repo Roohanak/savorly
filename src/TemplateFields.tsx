@@ -12,10 +12,11 @@ export default function TemplateFields({
   editable: boolean;
 }) {
   const design = templateDesign(page.template);
+  const toddler = page.template.startsWith("toddler");
   return (
     <div className={`template-writing format-${page.template}`}>
       <div className="page-letterhead">
-        <span>SAVORLY / KITCHEN JOURNAL</span>
+        <span>{toddler ? "SAVORLY / LITTLE DAYS" : "SAVORLY / KITCHEN JOURNAL"}</span>
         <strong>{design.format}</strong>
         <span className="page-letterhead-date">{page.title}</span>
       </div>
@@ -45,14 +46,14 @@ export default function TemplateFields({
       </div>
       <label className="loose-notes">
         <span>
-          {design.fields.length
+          {toddler ? "Little notes & happy moments" : design.fields.length
             ? "Loose notes & happy accidents"
             : "A page for your kitchen thoughts"}
         </span>
         <textarea
           aria-label="Journal page text"
           readOnly={!editable}
-          placeholder="A little more water? A pinch of something…"
+          placeholder={toddler ? "A little story, a scribble, a memory…" : "A little more water? A pinch of something…"}
           value={page.text}
           onChange={(e) => onChange({ text: e.target.value })}
         />

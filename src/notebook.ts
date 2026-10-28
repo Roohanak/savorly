@@ -31,6 +31,9 @@ export type NotebookPage = {
 };
 
 export const templates = [
+  { id: "toddler", title: "Toddler day planner", description: "Meals, naps, playtime and little moments worth keeping.", icon: "☁", paper: "lined", text: "" },
+  { id: "toddler-notes", title: "Toddler memory notes", description: "Funny words, new discoveries and notes for tomorrow.", icon: "♡", paper: "lined", text: "" },
+  { id: "toddler-sketch", title: "Toddler sketchbook", description: "Doodle, add photos and decorate with baby stickers.", icon: "✎", paper: "dots", text: "" },
   {
     id: "blank",
     title: "A blank page",
@@ -90,7 +93,7 @@ export const templates = [
 ] as const;
 
 export function newNotebookPage(templateId = "blank"): NotebookPage {
-  const template = templates.find((t) => t.id === templateId) ?? templates[0];
+  const template = templates.find((t) => t.id === templateId) ?? templates.find(t => t.id === "blank")!;
   return {
     id: newId(),
     title: template.id === "blank" ? "Untitled page" : template.title,
@@ -118,6 +121,28 @@ export type TemplateDesign = {
 };
 export function templateDesign(id: string): TemplateDesign {
   const designs: Record<string, TemplateDesign> = {
+    toddler: {
+      color: "#fff8ed", accent: "#9672ad", format: "Little days · Daily planner",
+      fields: [
+        {id:"date",label:"Date",placeholder:"Our day…",short:true},
+        {id:"name",label:"Little one's name",placeholder:"Name / age",short:true},
+        {id:"meals",label:"Meals & snacks",placeholder:"Breakfast, lunch, dinner and little snacks…"},
+        {id:"sleep",label:"Naps & bedtime",placeholder:"Nap times, bedtime and how we slept…"},
+        {id:"play",label:"Play & adventures",placeholder:"Stories, outdoor time, games and discoveries…"},
+        {id:"mood",label:"Mood & little wins",placeholder:"What made them smile today?"},
+        {id:"tomorrow",label:"For tomorrow",placeholder:"Things to pack, remember or try…",wide:true}
+      ]
+    },
+    "toddler-notes": {
+      color:"#fff0f5",accent:"#a76f94",format:"Little days · Memory notes",
+      fields:[
+        {id:"date",label:"Date",placeholder:"A day to remember…",short:true},
+        {id:"words",label:"Something they said",placeholder:"Their funny little words…"},
+        {id:"milestone",label:"A new discovery",placeholder:"Something they tried, learned or noticed…"},
+        {id:"memory",label:"Today's little story",placeholder:"The moment I want to keep…",wide:true}
+      ]
+    },
+    "toddler-sketch": {color:"#f4efff",accent:"#9672ad",format:"Little days · Doodles & keepsakes",fields:[]},
     blank: {
       color: "#ffffff",
       accent: "#778579",

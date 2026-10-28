@@ -1,6 +1,6 @@
 import PdfExportButton from "./PdfExportButton";
 import type { WeekPlan } from "./planner";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Recipe } from "./model";
 import type { NotebookPage } from "./notebook";
 import {
@@ -53,7 +53,34 @@ export default function JournalWorkspace({
     }
   }, [recipe.id, page]);
   const [notice, setNotice] = useState("");
+  const history = useRef<Record<string, { past: NotebookPage[]; future: NotebookPage[] }>>({});
+  useEffect(() => {
+    function keyboard(e: KeyboardEvent) {
+      if (!page || e.defaultPrevented || !(e.ctrlKey || e.metaKey) || e.altKey) return;
+      const target = e.target as HTMLElement;
+      if (target.closest("input,textarea,select,[contenteditable=true]")) return;
+      if (target !== document.body && !target.closest(".journal-workspace")) return;
+      const undo = e.key.toLowerCase() === "z" && !e.shiftKey;
+      const redo = e.key.toLowerCase() === "y" || (e.key.toLowerCase() === "z" && e.shiftKey);
+      if (!undo && !redo) return;
+      const h = history.current[page.id];
+      if (!h) return;
+      const source = undo ? h.past : h.future;
+      const next = source.pop();
+      if (!next) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      (undo ? h.future : h.past).push(page);
+      onChange({ journalPages: pages.map(p => p.id === page.id ? next : p) });
+      setNotice(undo ? "Undid the last page change." : "Redid the page change.");
+    }
+    document.addEventListener("keydown", keyboard, true);
+    return () => document.removeEventListener("keydown", keyboard, true);
+  }, [page, pages, onChange]);
   function update(patch: Partial<NotebookPage>) {
+    if (!page) return;
+    const h = history.current[page.id] ?? { past: [], future: [] };
+    history.current[page.id] = { past: [...h.past.slice(-29), page], future: [] };
     onChange({
       journalPages: pages.map((p) =>
         p.id === page.id ? { ...p, ...patch } : p,
@@ -72,10 +99,10 @@ export default function JournalWorkspace({
     setSelected(next.id);
   }
   return (
-    <section className="journal-workspace">
+    <section className={"journal-workspace" + (page?.template.startsWith("toddler") ? " toddler-pages" : "")}>
       <div className="notebook-heading">
         <div>
-          <p className="eyebrow">THE MESSY PART IS THE GOOD PART</p>
+          <p className="eyebrow">{page?.template.startsWith("toddler") ? "LITTLE DAYS, LOVELY MEMORIES" : "THE MESSY PART IS THE GOOD PART"}</p>
           <label className="experiment-title">
             Experiment title
             <input
