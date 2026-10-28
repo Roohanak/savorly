@@ -57,7 +57,7 @@ These items are proposed ownership for the invited teammate, not a claim that th
 ## Latest interaction and nutrition regressions
 
 - [ ] My Journal opens journal cards, Recipe Book opens recipe cards, and no mixed record list remains in the sidebar. Existing journals and recipe copies stay accessible.
-- [ ] Upload a photo with Arrange off: no selection box or resize handle. Enable Arrange, select/move/resize; disable it and confirm controls disappear. Check stickers, Delete/Backspace, Escape and Ctrl/Cmd+Z too.
+- [ ] Upload a photo: no selection box. Hover to reveal resize/rotate handles, move away to hide them; tap to select on touch screens. Check stickers, Delete/Backspace, Escape and Ctrl/Cmd+Z too.
 - [ ] Autosave survives reload; Save now reports a successful local write. In a disposable test profile, check storage failure feedback. It must not claim success on failure.
 - [ ] Recipe nutrition returns approximate per-serving calories/protein/carbs/fat and assumptions. Missing essential amounts must request details. Ingredient/method/serving edits clear stale results. Test server/provider errors without exposing the key. Keep notebook notes/photos out of nutrition requests.
 

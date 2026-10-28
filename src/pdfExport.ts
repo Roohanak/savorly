@@ -225,13 +225,12 @@ class Paper {
           width: 24,
           height: 32,
         };
-        this.image(
-          await this.photo(id),
-          (p.x * W) / 100,
-          (p.y * H) / 100,
-          (p.width * W) / 100,
-          (p.height * H) / 100,
-        );
+        c.save();
+        const px=(p.x*W)/100, py=(p.y*H)/100, pw=(p.width*W)/100, ph=(p.height*H)/100;
+        c.translate(px+pw/2,py+ph/2);
+        c.rotate(((p.rotation??0)*Math.PI)/180);
+        this.image(await this.photo(id),-pw/2,-ph/2,pw,ph);
+        c.restore();
       }
       for (const s of page.stickers ?? []) {
         const svg = renderToStaticMarkup(

@@ -134,7 +134,7 @@ Start with [docs/HANDOFF.md](docs/HANDOFF.md). PDF visual verification is the fi
 
 My Journal opens searchable journal cards; Recipe Book keeps its own recipe gallery. The old mixed sidebar list is removed. New journal creates a notebook. Changes still autosave; Save now explicitly writes the current journal/planner state and reports success or a storage error. PDF export is separate from saving.
 
-Canvas photos and stickers are locked by default. Turn on Arrange photos & stickers to select, move, resize or rotate; turn it off to hide selection controls. Use Delete/Backspace on a selected photo/sticker, Escape to deselect, and session-local undo/redo for page edits.
+Canvas photos and stickers have no selection-border boxes. In Text mode, hover over an item to reveal resize/rotate handles, or tap on a touch screen. There is no Arrange toggle. Use Delete/Backspace on a selected photo/sticker, Escape to deselect, and session-local undo/redo for page edits.
 
 Recipes have Estimate calories & macros. It sends only the recipe title, base servings, ingredients and method to the configured AI provider. Results are approximate model estimates, not verified food-database calculations. Missing essential quantities suppress numeric results and prompt for more details. Editing ingredients, method or base servings clears the estimate. One live provider request with synthetic ingredients succeeded; physical-device and browser UI testing remain partner tasks.
 

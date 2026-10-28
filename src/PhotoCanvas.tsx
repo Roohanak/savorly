@@ -1,3 +1,4 @@
+import { rotateSticker } from "./stickers";
 import { StickerPicker, StickerLayer } from "./StickerBoard";
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode, RefObject, PointerEvent } from "react";
@@ -32,8 +33,7 @@ export default function PhotoCanvas({
   className: string;
   children: ReactNode;
 }) {
-  const [arranging, setArranging] = useState(false);
-  const movable = canArrange && arranging;
+  const movable = canArrange;
   const [selectedSticker, setSelectedSticker] = useState("");
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [selected, setSelected] = useState("");
@@ -54,6 +54,10 @@ export default function PhotoCanvas({
     rect: DOMRect;
     position: PhotoPlacement;
     resize: boolean;
+    rotate: boolean;
+    centerX: number;
+    centerY: number;
+    startAngle: number;
     latest: PhotoPlacement;
   } | null>(null);
   const mounted = useRef(true);
@@ -131,20 +135,22 @@ export default function PhotoCanvas({
       if (mounted.current) setBusy(false);
     }
   }
-  function start(e: PointerEvent<HTMLDivElement>, id: string, resize: boolean) {
-    if (!movable || e.button !== 0 || !padRef.current) return;
+  function start(e: PointerEvent<HTMLDivElement>, id: string, resize: boolean, rotate = false) {
+    if (!movable || e.button !== 0 || !padRef.current || gesture.current) return;
     e.preventDefault();
     e.stopPropagation();
     setSelected(id);
     (e.currentTarget.closest(".canvas-photo") as HTMLElement | null)?.focus({ preventScroll: true });
     const p = position(id);
+    const box = e.currentTarget.closest(".canvas-photo")!.getBoundingClientRect();
+    const centerX = box.x + box.width/2, centerY = box.y + box.height/2;
     gesture.current = {
       id,
       startX: e.clientX,
       startY: e.clientY,
       rect: padRef.current.getBoundingClientRect(),
       position: p,
-      resize,
+      resize, rotate, centerX, centerY, startAngle: Math.atan2(e.clientY-centerY,e.clientX-centerX),
       latest: p,
     };
     e.currentTarget.setPointerCapture(e.pointerId);
@@ -154,11 +160,19 @@ export default function PhotoCanvas({
     if (!g) return;
     const dx = ((e.clientX - g.startX) * 100) / g.rect.width,
       dy = ((e.clientY - g.startY) * 100) / g.rect.height;
+    if (g.rotate) {
+      const angle = Math.atan2(e.clientY-g.centerY,e.clientX-g.centerX);
+      g.latest = {...g.position,rotation:rotateSticker(g.position.rotation??0,angle-g.startAngle)};
+      setDraft({id:g.id,position:g.latest});return;
+    }
+    const theta = ((g.position.rotation??0)*Math.PI)/180;
+    const localDx = ((e.clientX-g.startX)*Math.cos(theta)+(e.clientY-g.startY)*Math.sin(theta))*100/g.rect.width;
+    const localDy = (-(e.clientX-g.startX)*Math.sin(theta)+(e.clientY-g.startY)*Math.cos(theta))*100/g.rect.height;
     const p = g.resize
       ? {
           ...g.position,
-          width: clamp(g.position.width + dx, 10, 100 - g.position.x),
-          height: clamp(g.position.height + dy, 10, 100 - g.position.y),
+          width: clamp(g.position.width + localDx, 10, 100 - g.position.x),
+          height: clamp(g.position.height + localDy, 10, 100 - g.position.y),
         }
       : {
           ...g.position,
@@ -195,12 +209,6 @@ export default function PhotoCanvas({
             }}
           />
         </label>
-        <button type="button" onClick={() => {
-          if (movable) { setArranging(false); setSelected(""); setSelectedSticker(""); }
-          else { onArrange(); setArranging(true); }
-        }} aria-pressed={movable}>
-          Arrange photos & stickers {movable ? "· On" : "· Off"}
-        </button>
         {movable && selected && (page.photoIds ?? []).includes(selected) && (
           <button
             type="button"
@@ -232,8 +240,8 @@ export default function PhotoCanvas({
         )}
         <small>
           {movable
-            ? "Drag photos anywhere inside the canvas. Drag the corner to resize. Arrow keys move a selected photo."
-            : "Turn on Arrange photos & stickers to move or resize. Turn it off for a clean page."}
+            ? "Hover over a photo or sticker to show resize and rotation handles. Drag to move; tap to show controls on touch screens."
+            : "Choose Text to move photos or stickers. Hover to resize/rotate; tap on touch screens."}
         </small>
       </div>
       <StickerPicker
@@ -248,7 +256,7 @@ export default function PhotoCanvas({
           {error}
         </p>
       )}
-      <div ref={padRef} className={className}>
+      <div ref={padRef} className={className} onPointerDown={e=>{if(e.target===e.currentTarget){setSelected("");setSelectedSticker("");}}}>
         <div className="canvas-photo-layer">
           {photos.map((photo) => {
             const p =
@@ -269,6 +277,7 @@ export default function PhotoCanvas({
                   top: p.y + "%",
                   width: p.width + "%",
                   height: p.height + "%",
+                  transform: `rotate(${p.rotation ?? 0}deg)`,
                   pointerEvents: movable ? "auto" : "none",
                 }}
                 onPointerDown={(e) => start(e, photo.id, false)}
@@ -328,11 +337,17 @@ export default function PhotoCanvas({
                 }}
               >
                 <img src={photo.data} alt={photo.name} draggable={false} />
-                {movable && selected === photo.id && (
+                {movable && <div className="photo-rotate-handle" role="slider" tabIndex={0} aria-label={`Rotate photo ${photo.name}`} aria-valuemin={-180} aria-valuemax={180} aria-valuenow={Math.round(p.rotation??0)} title="Drag to rotate"
+                  onPointerDown={e=>start(e,photo.id,false,true)} onPointerMove={move} onPointerUp={finish} onPointerCancel={finish}
+                  onKeyDown={e=>{if(!["ArrowLeft","ArrowRight"].includes(e.key))return;e.preventDefault();e.stopPropagation();remember();onChange({photoLayout:{...page.photoLayout,[photo.id]:{...p,rotation:rotateSticker(p.rotation??0,(e.key==="ArrowRight"?1:-1)*Math.PI/36)}}});}}>↻</div>}
+                {movable && (
                   <div
-                    role="button"
+                    role="slider"
+                    tabIndex={0}
+                    aria-valuemin={10} aria-valuemax={100} aria-valuenow={Math.round(p.width)}
                     aria-label={`Resize photo ${photo.name}`}
                     className="photo-resize-handle"
+                    onKeyDown={e=>{if(!["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(e.key))return;e.preventDefault();e.stopPropagation();remember();const d=["ArrowRight","ArrowUp"].includes(e.key)?1:-1;onChange({photoLayout:{...page.photoLayout,[photo.id]:{...p,width:clamp(p.width+d,10,100-p.x),height:clamp(p.height+d,10,100-p.y)}}});}}
                     onPointerDown={(e) => start(e, photo.id, true)}
                     onPointerMove={move}
                     onPointerUp={finish}

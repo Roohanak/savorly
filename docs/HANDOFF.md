@@ -20,7 +20,7 @@ Local features work without credentials. For AI, copy `.env.example` to `.env`, 
 - AI recipe drafts, attempt comparisons and ingredient-swap suggestions through Nebius/NVIDIA. A direct cooking-question box is now implemented; independent response-quality testing remains.
 - Recipe PDF, selected-page PDF and all-pages PDF exports. The latest journal export wiring was fixed in commit `78eb2cf`, but a newly downloaded PDF has **not yet been visually verified** after that fix.
 
-Current automated checks: 41 tests, lint and production build passed. These do not verify physical iPad/Pencil behavior, live Supabase, deployed AI or visual PDF fidelity.
+Current automated checks: 42 tests, lint and production build passed. These do not verify physical iPad/Pencil behavior, live Supabase, deployed AI or visual PDF fidelity.
 
 ## Pick a manageable piece
 
@@ -41,6 +41,6 @@ See TEAM_MESSAGE.md for a casual message and TEST_PLAN.md for acceptance checks.
 
 ## Latest usability changes
 
-My Journal now opens a searchable journal-card library; the mixed sidebar list is removed. New experiment is now New journal. Autosave remains enabled with an explicit Save now button/status. Photo/sticker Arrange is off by default, so uploads have no resize outline until enabled. Recipe nutrition estimates are implemented with missing-quantity handling and a successful synthetic live-provider request. Please test these flows on desktop/iPad, including changing recipe quantities after an estimate. Nutrition is approximate and is not a validated nutrient database.
+My Journal now opens a searchable journal-card library; the mixed sidebar list is removed. New experiment is now New journal. Autosave remains enabled with an explicit Save now button/status. Photo/sticker resize and rotate handles appear on hover (tap on touch); selection border boxes and the Arrange toggle are removed. Recipe nutrition estimates are implemented with missing-quantity handling and a successful synthetic live-provider request. Please test these flows on desktop/iPad, including changing recipe quantities after an estimate. Nutrition is approximate and is not a validated nutrient database.
 
 Nutrition and scaling now share the same batch quantities and exact servings. Verify a five-serving recipe, switching recipes, changing base yield, missing ingredient amounts, and a scaled batch. Companion answers cooking questions and can suggest untested quantities; calorie/macronutrient estimates belong to the recipe Nutrition panel.

@@ -33,3 +33,10 @@ test('photo canvas layout survives backup and rejects out-of-bounds placement', 
   assert.deepEqual(parseBackup(backup),backup);
   assert.throws(()=>parseBackup({...backup,recipes:[{...recipe,journalPages:[{...page,photoLayout:{photo:{x:90,y:20,width:25,height:40}}}]}]}),/valid/);
 });
+
+test('rotated photos survive backups and invalid rotations cannot replace a journal',()=>{
+ const page={id:'rotation',title:'Photo',text:'',template:'blank',paper:'plain',strokes:[],photoIds:['photo'],photoLayout:{photo:{x:25,y:20,width:30,height:30,rotation:90}}};
+ const backup={version:2,recipes:[{...recipe,journalPages:[page]}],photos:[photo]};
+ assert.deepEqual(parseBackup(JSON.parse(JSON.stringify(backup))),backup);
+ assert.throws(()=>parseBackup({...backup,recipes:[{...recipe,journalPages:[{...page,photoLayout:{photo:{...page.photoLayout.photo,rotation:181}}}]}]}),/valid/);
+});

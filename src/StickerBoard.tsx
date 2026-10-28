@@ -306,7 +306,7 @@ export function StickerLayer({
             <span style={{ transform: `rotate(${s.rotation}deg)` }}>
               <StickerArt kind={s.kind} />
             </span>
-            {movable && selected === s.id && (
+            {movable && (
               <div
                 className="sticker-rotate-handle"
                 role="slider"
@@ -343,7 +343,7 @@ export function StickerLayer({
                 ↻
               </div>
             )}
-            {movable && selected === s.id && (
+            {movable && (
               <div
                 className="sticker-resize-handle"
                 role="slider"

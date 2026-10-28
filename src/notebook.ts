@@ -11,6 +11,7 @@ export type InkStroke = {
   region?: "pad";
 };
 export type PhotoPlacement = {
+  rotation?: number;
   x: number;
   y: number;
   width: number;

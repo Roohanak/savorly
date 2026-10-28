@@ -1143,3 +1143,10 @@
 .companion-question label {display:grid;gap:8px}
 .companion-question textarea {min-height:110px}
 .companion-question small {line-height:1.5;color:#766b70}
+/* No selection boxes: controls appear only over the item, or for keyboard/touch selection. */
+.sectioned-app .canvas-photo,.sectioned-app .canvas-photo.selected,.sectioned-app .placed-sticker,.sectioned-app .placed-sticker.selected {border:0;outline:none;box-shadow:none}
+.photo-rotate-handle {position:absolute;left:calc(50% - 14px);top:-32px;width:28px;height:28px;border-radius:50%;border:2px solid white;background:#a34c57;color:white;display:grid;place-items:center;cursor:grab;touch-action:none}
+.canvas-photo .photo-resize-handle,.canvas-photo .photo-rotate-handle,.placed-sticker .sticker-resize-handle,.placed-sticker .sticker-rotate-handle {opacity:0;pointer-events:none;transition:opacity .12s}
+.canvas-photo:hover .photo-resize-handle,.canvas-photo:hover .photo-rotate-handle,.canvas-photo:focus-visible .photo-resize-handle,.canvas-photo:focus-visible .photo-rotate-handle,.placed-sticker:hover .sticker-resize-handle,.placed-sticker:hover .sticker-rotate-handle,.placed-sticker:focus-visible .sticker-resize-handle,.placed-sticker:focus-visible .sticker-rotate-handle,.photo-resize-handle:focus-visible,.photo-rotate-handle:focus-visible,.sticker-resize-handle:focus-visible,.sticker-rotate-handle:focus-visible {opacity:1;pointer-events:auto}
+@media(hover:none){.canvas-photo.selected .photo-resize-handle,.canvas-photo.selected .photo-rotate-handle,.placed-sticker.selected .sticker-resize-handle,.placed-sticker.selected .sticker-rotate-handle {opacity:1;pointer-events:auto}}
+.canvas-photo::before,.placed-sticker::before {content:"";position:absolute;inset:-36px -10px -10px;background:transparent;pointer-events:inherit}

@@ -76,6 +76,7 @@ function validPages(value: unknown): boolean {
               [box.x, box.y, box.width, box.height].every(
                 (n) => typeof n === "number" && Number.isFinite(n),
               ) &&
+              (box.rotation === undefined || (typeof box.rotation === "number" && Number.isFinite(box.rotation) && Math.abs(box.rotation) <= 180)) &&
               Number(box.x) >= 0 &&
               Number(box.y) >= 0 &&
               Number(box.width) >= 10 &&
