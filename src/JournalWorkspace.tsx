@@ -20,6 +20,7 @@ type Props = {
   week?: string;
   recipes?: Recipe[];
   appearance?: string;
+  getRecipe?: () => Recipe | undefined;
 };
 export default function JournalWorkspace({
   recipe,
@@ -30,6 +31,7 @@ export default function JournalWorkspace({
   week,
   recipes,
   appearance,
+  getRecipe,
 }: Props) {
   const pages = pagesFor(recipe);
   const [selected, setSelected] = useState(() => {
@@ -118,6 +120,7 @@ export default function JournalWorkspace({
           <PdfExportButton
             recipe={recipe}
             notebook
+            getRecipe={getRecipe}
             appearance={appearance}
             weeks={weeks}
             week={week}
@@ -148,7 +151,7 @@ export default function JournalWorkspace({
       {page ? (
         <>
           <div className="notebook-page-title">
-            <PdfExportButton key={page.id} recipe={recipe} appearance={appearance} page={page} weeks={weeks} week={week} recipes={recipes} />
+            <PdfExportButton key={page.id} recipe={recipe} getRecipe={getRecipe} appearance={appearance} page={page} weeks={weeks} week={week} recipes={recipes} />
             <label>
               Page title
               <input

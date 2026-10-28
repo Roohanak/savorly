@@ -1,3 +1,4 @@
+import { exportSnapshot } from "./exportSnapshot";
 import { useState } from "react";
 import type { NotebookPage } from "./notebook";
 import type { Recipe } from "./model";
@@ -10,6 +11,7 @@ export default function PdfExportButton({
   week,
   recipes,
   appearance,
+  getRecipe,
 }: {
   recipe: Recipe;
   notebook?: boolean;
@@ -18,6 +20,7 @@ export default function PdfExportButton({
   week?: string;
   recipes?: Recipe[];
   appearance?: string;
+  getRecipe?: () => Recipe | undefined;
 }) {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
@@ -32,9 +35,10 @@ export default function PdfExportButton({
           setMessage("");
           try {
             const pdf = await import("./pdfExport");
+            const current = exportSnapshot(getRecipe ? getRecipe() : recipe, page?.id);
             if (notebook || page)
-              await pdf.exportNotebook(recipe, weeks, week, recipes, page, appearance);
-            else await pdf.exportRecipe(recipe, appearance);
+              await pdf.exportNotebook(current.recipe, weeks, week, recipes, current.page, appearance);
+            else await pdf.exportRecipe(current.recipe, appearance);
             setMessage("PDF downloaded. Your original stays editable.");
           } catch (e) {
             setMessage(
@@ -50,7 +54,7 @@ export default function PdfExportButton({
           : page
             ? "↓ Save this page PDF"
             : notebook
-            ? "↓ Save notebook PDF"
+            ? `↓ Save all ${recipe.journalPages?.length ?? 1} pages PDF`
             : "↓ Save recipe PDF"}
       </button>
       {message && (

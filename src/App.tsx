@@ -880,7 +880,7 @@ export default function App() {
               {page === "recipes" && (
                 <section className="editor card recipe-page-editor">
                   <div className="editor-heading">
-                    <PdfExportButton recipe={recipe} appearance={appearance} />
+                    <PdfExportButton recipe={recipe} getRecipe={() => recipesRef.current.find(r => r.id === recipe.id)} appearance={appearance} />
                     <button
                       className="text-button"
                       onClick={() => navigate("recipes", "")}
