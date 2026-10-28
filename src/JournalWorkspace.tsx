@@ -118,6 +118,7 @@ export default function JournalWorkspace({
       {page ? (
         <>
           <div className="notebook-page-title">
+            <PdfExportButton key={page.id} recipe={recipe} page={page} weeks={weeks} week={week} recipes={recipes} />
             <label>
               Page title
               <input

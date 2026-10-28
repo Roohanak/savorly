@@ -261,9 +261,10 @@ export async function exportNotebook(
   weeks: WeekPlan[] = [],
   week = "",
   recipes: Recipe[] = [recipe],
+  selectedPage?: NotebookPage,
 ) {
   const p = await writer();
-  const pages = pagesFor(recipe);
+  const pages = selectedPage ? [selectedPage] : pagesFor(recipe);
   if (!pages.length) {
     p.text(recipe.title, 54, "#a73e4b", true);
     p.text("This notebook has no pages yet.");
@@ -309,6 +310,7 @@ export async function exportNotebook(
       }
     }
     if (
+      page.template === "blank" || page.paper !== "plain" ||
       page.strokes.some((s) => s.region === "pad") ||
       page.photoIds?.length ||
       page.stickers?.length
@@ -321,5 +323,5 @@ export async function exportNotebook(
       await p.sketch(page, true);
     }
   }
-  p.save(recipe.title + " - notebook");
+  p.save(recipe.title + " - " + (selectedPage ? selectedPage.title || "page" : "notebook"));
 }

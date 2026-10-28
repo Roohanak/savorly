@@ -1,15 +1,18 @@
 import { useState } from "react";
+import type { NotebookPage } from "./notebook";
 import type { Recipe } from "./model";
 import type { WeekPlan } from "./planner";
 export default function PdfExportButton({
   recipe,
   notebook = false,
+  page,
   weeks,
   week,
   recipes,
 }: {
   recipe: Recipe;
   notebook?: boolean;
+  page?: NotebookPage;
   weeks?: WeekPlan[];
   week?: string;
   recipes?: Recipe[];
@@ -27,8 +30,8 @@ export default function PdfExportButton({
           setMessage("");
           try {
             const pdf = await import("./pdfExport");
-            if (notebook)
-              await pdf.exportNotebook(recipe, weeks, week, recipes);
+            if (notebook || page)
+              await pdf.exportNotebook(recipe, weeks, week, recipes, page);
             else await pdf.exportRecipe(recipe);
             setMessage("PDF downloaded. Your original stays editable.");
           } catch (e) {
@@ -42,7 +45,9 @@ export default function PdfExportButton({
       >
         {busy
           ? "Preparing PDF…"
-          : notebook
+          : page
+            ? "↓ Save this page PDF"
+            : notebook
             ? "↓ Save notebook PDF"
             : "↓ Save recipe PDF"}
       </button>

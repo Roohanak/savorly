@@ -118,3 +118,5 @@ Use Save recipe PDF in a recipe or Save notebook PDF in the journal to download 
 
 ### Toddler planner theme
 Use the Theme dropdown in the top bar to choose Plain paper, Scrapbook, or Toddler planner. Toddler planner adds original vector baby, teddy, cloud and star wallpaper, lavender navigation, pastel day cards and matching grocery panels. The selection is saved in this browser and does not change notebook content.
+
+Each notebook page also has Save this page PDF beside its page title. This exports that selected page only, using its title in the filename. Save notebook PDF still includes all pages. Plain freeform, lined and dotted pages retain their sketch area even without ink.
