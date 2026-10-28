@@ -154,21 +154,16 @@ function scaleIngredients(text: string, ratio: number) {
     .join("\n");
 }
 export default function App() {
-  const [scrapbook, setScrapbook] = useState(() => {
+  const [appearance, setAppearance] = useState(() => {
     try {
-      return localStorage.getItem("savorly-appearance") !== "plain";
-    } catch {
-      return true;
-    }
+      const saved = localStorage.getItem("savorly-appearance");
+      return saved === "plain" || saved === "toddler" ? saved : "scrapbook";
+    } catch { return "scrapbook"; }
   });
-  function changeAppearance() {
-    const next = !scrapbook;
-    setScrapbook(next);
-    try {
-      localStorage.setItem("savorly-appearance", next ? "scrapbook" : "plain");
-    } catch {
-      /* Optional appearance preference. */
-    }
+  const scrapbook = appearance !== "plain";
+  function changeAppearance(next: string) {
+    setAppearance(next);
+    try { localStorage.setItem("savorly-appearance", next); } catch { /* Optional preference. */ }
   }
   const [records, setRecipeState] = useState<Recipe[]>(load);
   const recipes = records.filter((r) => !r.deletedAt);
@@ -621,7 +616,7 @@ export default function App() {
     >
       <div
         className={
-          "app-shell sectioned-app" + (scrapbook ? " scrapbook-theme" : "")
+          "app-shell sectioned-app" + (scrapbook ? " scrapbook-theme" : "") + (appearance === "toddler" ? " toddler-theme" : "")
         }
       >
         <aside className="sidebar">
@@ -721,14 +716,14 @@ export default function App() {
           <header className="topbar">
             <span>My kitchen / {heading[2]}</span>
             <div className="context-actions">
-              <button
-                type="button"
-                className="appearance-toggle"
-                aria-pressed={scrapbook}
-                onClick={changeAppearance}
-              >
-                {scrapbook ? "✿ Scrapbook" : "Plain paper"}
-              </button>
+              <label className="theme-picker">
+                <span>Theme</span>
+                <select aria-label="App theme" value={appearance} onChange={(e) => changeAppearance(e.target.value)}>
+                  <option value="plain">Plain paper</option>
+                  <option value="scrapbook">✿ Scrapbook</option>
+                  <option value="toddler">☁ Toddler planner</option>
+                </select>
+              </label>
               <span className="pill">Your kitchen notebook</span>
               {recipe &&
                 !(page === "recipes" && !route.recipeId) &&

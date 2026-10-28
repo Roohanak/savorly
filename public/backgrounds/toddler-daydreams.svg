@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="640" viewBox="0 0 720 640">
+<defs>
+<g id="baby" stroke="#826c79" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+<path d="M-33 37q-22 16-17 43l20 12 12-17h36l12 17 20-12q5-27-17-43" fill="#d5caed"/>
+<circle cy="0" r="43" fill="#ffe1c7"/>
+<path d="M-8-41q20-25 22-5q0 9-12 8" fill="none"/>
+<path d="M-18-1h2m32 0h2" stroke-width="5"/>
+<ellipse cx="-26" cy="12" rx="8" ry="5" fill="#f2a5b5" stroke="none"/><ellipse cx="26" cy="12" rx="8" ry="5" fill="#f2a5b5" stroke="none"/>
+<path d="M-9 13q9 12 18 0" fill="none"/>
+<path d="M-18 40q18 28 36 0" fill="#fffaf2"/>
+<path d="M-31 65l-8 10m70-10 8 10"/>
+</g>
+<g id="cloud" fill="#fffdf9" stroke="#c2c9e5" stroke-width="2.5"><path d="M-40 16c-28-5-23-35 0-37 5-33 48-31 54-4 32-11 48 33 20 41z"/><path d="M-15 0h1m19 0h1" stroke="#9b91ac" stroke-width="4" stroke-linecap="round"/><path d="M-10 8q7 7 14 0" fill="none"/></g>
+<g id="star" fill="#ffe5a0" stroke="#d8b878" stroke-width="2"><path d="M0-20l6 13 15 2-11 10 3 16-13-8-13 8 3-16-11-10 15-2z"/></g>
+<g id="bear" stroke="#9b806c" stroke-width="2.5"><circle cx="-21" cy="-20" r="12" fill="#eacdae"/><circle cx="21" cy="-20" r="12" fill="#eacdae"/><circle r="30" fill="#efd8bf"/><ellipse cy="10" rx="14" ry="11" fill="#fff3e3"/><path d="M-12-3h1m22 0h1" stroke-width="4" stroke-linecap="round"/><path d="M-4 8q4-5 8 0l-4 4z" fill="#9b806c"/></g>
+</defs>
+<g opacity=".88"><use href="#baby" transform="translate(118 104) rotate(-9)"/><use href="#baby" transform="translate(549 433) rotate(10)"/><use href="#cloud" transform="translate(425 90)"/><use href="#cloud" transform="translate(180 440) scale(.8)"/><use href="#bear" transform="translate(604 180) rotate(12)"/><use href="#bear" transform="translate(335 295) rotate(-12)"/><use href="#star" transform="translate(268 118)"/><use href="#star" transform="translate(659 559) scale(.8)"/><use href="#star" transform="translate(63 333) scale(.7)"/>
+<path d="M419 540c-23-30-51 1 0 29 51-28 23-59 0-29z" fill="#efbdca"/><path d="M605 58c-16-21-36 1 0 21 36-20 16-42 0-21z" fill="#cbbde9"/>
+<g fill="#c5d9cd"><circle cx="283" cy="532" r="5"/><circle cx="477" cy="251" r="5"/><circle cx="51" cy="585" r="6"/></g><g fill="#e9c0d1"><circle cx="210" cy="270" r="5"/><circle cx="672" cy="302" r="6"/></g></g></svg>

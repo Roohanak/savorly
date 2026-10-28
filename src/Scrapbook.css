@@ -1088,3 +1088,25 @@
   gap: 10px;
   flex-wrap: wrap;
 }
+.theme-picker {display:flex;align-items:center;gap:8px;font-size:13px;color:#755668}
+.theme-picker select {border:1px solid #dfc8cb;border-radius:12px;padding:9px 12px;background:#fffdf9;color:#794752;max-width:210px;font:inherit}
+.sectioned-app.toddler-theme {--scrap-ink:#55465e;--scrap-green:#9675ac;--scrap-paper:#fffdfb;color:#55465e}
+.toddler-theme::before {background:#f8eef7 url('/backgrounds/toddler-daydreams.svg') center top/600px auto repeat}
+.toddler-theme::after {background:#dbcce9;box-shadow:0 0 0 4px #fffdfb,0 18px 45px #83679525}
+.sectioned-app.toddler-theme main {background:#fffdfbe8 url('/backgrounds/toddler-daydreams.svg') center top/720px 640px repeat;border-radius:0 22px 22px 0}
+.sectioned-app.toddler-theme .sidebar {background:#f3edf9ed;border-color:#d7c9e7}
+.toddler-theme .sidebar::before {content:'little days, lovely memories';background:#fff5db;color:#8b658b;border:2px dashed #d7b4ca;border-radius:18px;transform:none}
+.sectioned-app.toddler-theme .brand,.sectioned-app.toddler-theme .brand span,.sectioned-app.toddler-theme .page-heading h1,.sectioned-app.toddler-theme h2,.sectioned-app.toddler-theme h3 {color:#916092}
+.sectioned-app.toddler-theme .primary {background:#9672ad;border-color:#9672ad;color:#fff}
+.sectioned-app.toddler-theme .primary:hover:not(:disabled) {background:#7f5b96;border-color:#7f5b96}
+.sectioned-app.toddler-theme .main-navigation a[aria-current='page'],.sectioned-app.toddler-theme .recipe-link.active {background:#e5d9f1;color:#714b85;border-color:#c9b0dc}
+.sectioned-app.toddler-theme .card,.sectioned-app.toddler-theme .drawing-panel {background:#fffefcf2;border:1px solid #dfcfe7;box-shadow:0 5px 16px #9874a00c;border-radius:20px}
+.sectioned-app.toddler-theme .day-card {background:#fff7dcf5;border:1px solid #edddad;border-top:7px solid #e6c883;border-radius:18px;transform:none}
+.sectioned-app.toddler-theme .day-card:nth-child(3n+2) {background:#f6edfff5;border-color:#ddcbed;border-top-color:#c9abe0}
+.sectioned-app.toddler-theme .day-card:nth-child(3n) {background:#edfaf6f5;border-color:#c2e0d3;border-top-color:#a6cfbf}
+.sectioned-app.toddler-theme .shopping-panel {background:#fff0f5f5;border-color:#e6c4d2;transform:none;border-radius:22px}
+.sectioned-app.toddler-theme .global-status {background:#ede5f6;color:#74557d}
+.sectioned-app.toddler-theme .bounded-editor {border-color:#d9c2e5}
+.sectioned-app.toddler-theme .canvas-writing-tools,.sectioned-app.toddler-theme .writing-toolbar {background:#f8f1fc;border-color:#dfcde8}
+.sectioned-app.toddler-theme .writing-toolbar button[aria-pressed='true'],.sectioned-app.toddler-theme .canvas-writing-tools button[aria-pressed='true'] {background:#9672ad;border-color:#9672ad;color:white}
+@media(max-width:700px){.theme-picker>span{display:none}.theme-picker select{max-width:180px}.sectioned-app.toddler-theme main{background-size:500px auto}}

@@ -115,3 +115,6 @@ The repository can stay private during collaboration. The hackathon submission r
 ## PDF copies
 
 Use Save recipe PDF in a recipe or Save notebook PDF in the journal to download a portable PDF. Notebook copies include typed fields, ink, photos, stickers and the selected weekly plan. Changes also autosave in the browser; PDF downloads are separate snapshots, not editable backups. Choose Sketch paper beside the drawing area for plain, lined or dotted paper.
+
+### Toddler planner theme
+Use the Theme dropdown in the top bar to choose Plain paper, Scrapbook, or Toddler planner. Toddler planner adds original vector baby, teddy, cloud and star wallpaper, lavender navigation, pastel day cards and matching grocery panels. The selection is saved in this browser and does not change notebook content.
