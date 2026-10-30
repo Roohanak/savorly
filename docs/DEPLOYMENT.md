@@ -4,7 +4,7 @@ The Node service serves the built website and `/api/assist` from the same origin
 
 ## Prepared Render deployment
 
-The repository contains `render.yaml`. In Render, create a Blueprint from `Roohanak/savorly`, branch `main`, then review the generated web service before creating it. The blueprint uses Node 24, runs `npm ci && npm run build`, starts `npm start` and checks `/healthz`.
+The repository contains `render.yaml`. In Render, create a Blueprint from `Roohanak/savorly`, branch `main`, then review the generated web service before creating it. The blueprint uses Node 24, runs `npm ci --include=dev && npm run build`, starts `npm start` and checks `/healthz`.
 
 Supply these secret environment values in Render, never Git:
 
