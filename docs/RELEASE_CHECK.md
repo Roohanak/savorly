@@ -23,7 +23,7 @@
 
 ## Automated verification
 
-All 61 tests passed; lint and production build passed. Run `npm test`, `npm run lint`, `npm run build`, and `npm audit`. The tests include conversation validation/context ordering, backups/workspace migration, planner scaling, nutrition missing quantities, PDF snapshots, production sessions, origin checks, static file protection and AI limit behavior. Provider calls are stubbed in automated tests; the browser chat checks above used the configured live provider.
+All 61 tests passed; lint and production build passed. A fresh clone of commit abcf6fc also passed npm ci, tests, lint and build without a private .env file; npm reported zero vulnerabilities. Run `npm test`, `npm run lint`, `npm run build`, and `npm audit`. The tests include conversation validation/context ordering, backups/workspace migration, planner scaling, nutrition missing quantities, PDF snapshots, production sessions, origin checks, static file protection and AI limit behavior. Provider calls are stubbed in automated tests; the browser chat checks above used the configured live provider.
 
 ## Still requiring external/device checks
 
