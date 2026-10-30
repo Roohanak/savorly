@@ -1,3 +1,5 @@
+import { validConversation } from "./chat.ts";
+import type { ChatMessage } from "./chat";
 import { validStickers } from "./stickers.ts";
 import type { NotebookPage } from "./notebook";
 import type { WeekPlan } from "./planner";
@@ -12,6 +14,7 @@ export type Attempt = {
 };
 
 export type Recipe = {
+  conversation?: ChatMessage[];
   id: string;
   title: string;
   category: string;
@@ -148,6 +151,7 @@ export function validateRecipes(value: unknown): asserts value is Recipe[] {
         (r.subcategory === undefined ||
           (typeof r.subcategory === "string" && r.subcategory.length <= 100)) &&
         (r.recipeBook === undefined || typeof r.recipeBook === "boolean") &&
+        validConversation(r.conversation) &&
         validIds(r.photoIds) &&
         validPages(r.journalPages) &&
         Array.isArray(r.attempts) &&

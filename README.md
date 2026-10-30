@@ -25,7 +25,7 @@ The journal, photos, planner and local caption template work without credentials
 npm run server
 ```
 
-The AI helper listens on `127.0.0.1:3001`. Open the app on **5173**; opening 3001 directly returns `Not found` because it is an API, not a website. If you see `EADDRINUSE`, an existing process is already listening: stop the earlier server in its terminal with Ctrl+C before restarting it.
+The AI helper listens on `127.0.0.1:3001`. Open the app on **5173**; after `npm run build`, port 3001 also serves the built website and API. If you see `EADDRINUSE`, an existing process is already listening: stop the earlier server in its terminal with Ctrl+C before restarting it.
 
 ## AI configuration and data flow
 
@@ -47,11 +47,11 @@ Never put `AI_API_KEY` in a `VITE_` variable, frontend source, screenshots, issu
 
 The scrapbook palette uses cherry-red gingham accents, cream paper and brighter pastel notes. Handwritten headings and journal text use locally hosted Gaegu (regular/bold); its SIL Open Font License is included in `public/fonts/Gaegu-OFL.txt`. Smaller UI labels retain their readable sans-serif font.
 
-The top-bar **Scrapbook / Plain paper** button switches between the cozy notebook-photo backdrop and the original white workspace; the preference stays on this device. Sketches blend into dotted/lined paper in Scrapbook mode. Grocery items appear in four sticky-note groups (Produce, Dairy & protein, Pantry, Other); automatic keyword grouping is a visual convenience, not a food taxonomy. Each sticky also has a directly writable multiline notes area. These freeform notes save per week and are shared between the weekly notebook and Meal Planner; they do not automatically become checkbox items. Use Add a shopping item for checkable items.
+The top-bar **Scrapbook / Plain paper** button switches between the original illustrated cozy backdrop and the original white workspace; the preference stays on this device. Sketches blend into dotted/lined paper in Scrapbook mode. Grocery items appear in four sticky-note groups (Produce, Dairy & protein, Pantry, Other); automatic keyword grouping is a visual convenience, not a food taxonomy. Each sticky also has a directly writable multiline notes area. These freeform notes save per week and are shared between the weekly notebook and Meal Planner; they do not automatically become checkbox items. Use Add a shopping item for checkable items.
 
 Inside a notebook's Handwriting & sketches area, open **Stickers** to add original vector pasta, strawberry, mushroom, flower, cat, chicken, heart, sparkle, coffee, bread and 22 more doodles. Use **Move photos / Text** to drag stickers, or focus a sticker and use arrow keys. Drag the corner to resize or the round handle to rotate. Delete/Backspace removes the selected sticker, Escape deselects, and Ctrl/Cmd+Z undoes the last sticker change. Choose Pen to draw over stickers/photos. Up to 30 stickers per page; positions, size and tilt are saved with the notebook and included in validated backups/cloud snapshots. Ink and stickers are not sent to AI.
 
-The supplied reference photo in `public/backgrounds/cozy-notebook.png` is used unmodified as the page backdrop. Confirm distribution rights or replace it before public release. `kitchen-doodles.svg` and `StickerArt.tsx` are original code-drawn assets.
+The backdrop uses original `cozy-desk.svg` artwork. The supplied reference is preserved outside published assets in `reference-assets/`; review rights before publishing source. `kitchen-doodles.svg` and `StickerArt.tsx` are original code-drawn assets.
 
 ## Current app
 
@@ -108,27 +108,27 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for branches and pull requests, and [docs
 
 ## Deployment and submission status
 
-This is a local prototype, not a deployed public service. The AI helper currently has no user authentication or rate limiting and must remain loopback-only until those are implemented. A static frontend build alone cannot call the helper through Vite's development proxy. Before a public deployment, configure a hosted API, authentication, usage limits and allowed origins.
+The deployment configuration is prepared but no public URL is live yet. The production server serves the frontend/API with a demo password, signed sessions, origin checks and usage limits. See docs/DEPLOYMENT.md for setup and the final production smoke test.
 
-The repository can stay private during collaboration. The hackathon submission rules require a public source repository with an open-source license and a working demo/test build. Choose the license with the team before making it public; this handoff does not grant an open-source license or publish the code. Review image/asset rights before public distribution, including `src/assets/hero.png`. Check the official event rules for the final submission requirements.
+The repository can stay private during collaboration. Confirm the event’s source visibility, license and demo requirements with the team. Choose the license with the team before making it public; this handoff does not grant an open-source license or publish the code. Review image/asset rights before public distribution, including `src/assets/hero.png`. Check the official event rules for the final submission requirements.
 
 ## PDF copies
 
 Use Save recipe PDF in a recipe or Save notebook PDF in the journal to download a portable PDF. Notebook copies include typed fields, ink, photos, stickers and the selected weekly plan. Changes also autosave in the browser; PDF downloads are separate snapshots, not editable backups. Choose Sketch paper beside the drawing area for plain, lined or dotted paper.
 
 ### Toddler planner theme
-Use the Theme dropdown in the top bar to choose Plain paper, Scrapbook, or Toddler planner. Toddler planner adds original vector baby, teddy, cloud and star wallpaper, lavender navigation, pastel day cards and matching grocery panels. The selection is saved in this browser and does not change notebook content.
+Use the Theme dropdown in the top bar to choose Plain paper, Scrapbook, or Toddler planner. Toddler planner adds original vector baby, teddy, cloud and star wallpaper, lavender navigation, pastel day cards and matching grocery panels. The selection is saved in this browser. Toddler has its own workspace; Plain paper and Scrapbook share cooking content.
 
 Each notebook page also has Save this page PDF beside its page title. This exports that selected page only, using its title in the filename. Save all pages PDF still includes all pages. Plain freeform, lined and dotted pages retain their sketch area even without ink.
 
 ### Toddler notebook templates
-Templates includes Toddler day planner (meals, naps, play, mood and tomorrow), Toddler memory notes, and Toddler sketchbook. Their artwork and fields apply independently of the app appearance. They use the same pen/eraser, photo canvas, draggable/resizable/rotatable stickers and per-page/all-notebook PDF exports. The sticker tray includes baby, teddy, cloud, rainbow, blocks and bottle designs. Outside text fields, Ctrl/Cmd+Z undoes the latest page edit, Ctrl/Cmd+Shift+Z or Ctrl+Y redoes it; Delete/Backspace removes a selected sticker and Escape deselects. History is limited to 30 edits per page while that journal workspace stays open; text fields retain browser-native undo.
+Templates includes Toddler day planner (meals, naps, play, mood and tomorrow), Toddler memory notes, and Toddler sketchbook. Toddler templates appear only in the Toddler workspace. They use the same pen/eraser, photo canvas, draggable/resizable/rotatable stickers and per-page/all-notebook PDF exports. The sticker tray includes baby, teddy, cloud, rainbow, blocks and bottle designs. Outside text fields, Ctrl/Cmd+Z undoes the latest page edit, Ctrl/Cmd+Shift+Z or Ctrl+Y redoes it; Delete/Backspace removes a selected sticker and Escape deselects. History is limited to 30 edits per page while that journal workspace stays open; text fields retain browser-native undo.
 
 PDF notebook copies preserve each page's chosen color and template headings, including empty field cards. Toddler pages include their baby wallpaper and lavender accents. Long field values continue onto additional pages; the export uses a printable A4 layout rather than capturing browser controls.
 
-## Partner priorities (October 28)
+## Partner priorities (October 29)
 
-Start with [docs/HANDOFF.md](docs/HANDOFF.md). PDF visual verification is the first remaining priority: the latest journal wiring fix passes build/tests but the resulting download has not been visually confirmed. The handoff distinguishes implemented features from unverified device/cloud behavior and proposes optional areas for the partner to choose. [docs/TEST_PLAN.md](docs/TEST_PLAN.md) includes the edit-to-PDF regression checklist.
+Start with [docs/HANDOFF.md](docs/HANDOFF.md). A selected-page PDF has been downloaded and visually verified with replaced text, photo, ink and sticker. Prioritize physical iPad/Pencil checks, live Supabase isolation and the final deployed URL. The handoff distinguishes implemented features from unverified device/cloud behavior and proposes optional areas for the partner to choose. [docs/TEST_PLAN.md](docs/TEST_PLAN.md) includes the edit-to-PDF regression checklist.
 
 ## Saving, journal library and nutrition
 
@@ -151,3 +151,9 @@ Plain paper and Scrapbook share the cooking journals/recipes/planner. Toddler pl
 A one-time migration separates existing toddler-template pages from mixed legacy notebooks. Cooking fields/notes/attempts stay in cooking; toddler pages move to the toddler area. Existing generic pages cannot reliably be classified by theme history and stay with cooking. Mixed cooking copies are labeled “(cooking pages)”. No media are deleted. Settings → Export original pre-separation copy downloads the original combined snapshot if needed.
 
 Backups identify their workspace and cannot silently replace another workspace. Cloud rows are scoped by account and workspace. Existing Supabase projects must run `supabase/workspaces-migration.sql` before using the updated sync controls; new projects use the updated setup.sql. This schema change is prepared locally, not applied to a live project or live-tested.
+
+## Conversational AI and deployment
+
+AI Companion now keeps a conversation per recipe and workspace. Ask follow-up questions in the same thread; New chat starts over with a session-local undo option. Stop reply and Retry handle interrupted requests. Up to 60 messages are saved with the recipe and its backup; the latest bounded 20 messages plus recipe context are sent to the provider. Typed notebook text is included only when explicitly polishing notes into a recipe. No photos or ink are sent.
+
+The complete frontend/API can run together with `npm run build` then `npm start`. See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for the prepared protected-demo deployment and [docs/RELEASE_CHECK.md](docs/RELEASE_CHECK.md) for observed tests and remaining physical-device/cloud checks. Automated checks also run in GitHub Actions. Never put an AI key in VITE-prefixed configuration.

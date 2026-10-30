@@ -18,15 +18,25 @@ export function parseRecipeDraft(
   };
   let section: "ingredients" | "steps" | "notes" | null = null;
   let titleNext = false;
+  let servingsNext = false;
+  const titleYield = text.split("\n").slice(0, 4).join(" ").match(/\((\d+)\s+servings?\)/i);
+  if (titleYield) draft.servings = Math.max(1, Math.min(100, Number(titleYield[1])));
   for (const raw of text.split("\n")) {
     const line = raw.trim().replace(/\*\*/g, "");
     const label = line
       .replace(/^#{1,6}\s*/, "")
       .replace(/:$/, "")
       .toLowerCase();
-    const serving = line.match(/^servings\s*:\s*(\d+)/i);
+    const clean = line.replace(/^#{1,6}\s*/, "");
+    const serving = clean.match(/^(?:servings|serves|yield)\s*:\s*(\d+)/i) ?? (servingsNext ? clean.match(/^(\d+)\b/i) : null);
     if (serving) {
+      servingsNext = false;
       draft.servings = Math.max(1, Math.min(100, Number(serving[1])));
+      continue;
+    }
+    if (/^(?:servings|serves|yield)$/.test(label)) {
+      servingsNext = true;
+      section = null;
       continue;
     }
     if (/^title\s*:/i.test(line)) {

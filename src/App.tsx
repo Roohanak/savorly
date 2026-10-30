@@ -1,3 +1,4 @@
+import { remapPhotoReferences } from "./backupLayout";
 import { migrateWorkspaces, workspaceKeys } from "./workspaces";
 import type { Workspace } from "./workspaces";
 import { scaleIngredients } from "./recipeScaling";
@@ -10,14 +11,14 @@ import {
   sameCategory,
 } from "./categories";
 import RecipeBook from "./RecipeBook";
-import AIResult from "./AIResult";
+import CompanionChat from "./CompanionChat";
 import type { RecipeDraft } from "./recipeDraft";
 import SharedPlanner from "./SharedPlanner";
 import { PlannerContext } from "./plannerContext";
 import type { WeekPlan } from "./planner";
 import { loadPlans, monday } from "./planner";
 import { newId } from "./id.ts";
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useRef, useState, useSyncExternalStore } from "react";
 import type { JournalBackup, Recipe } from "./model";
 import { parseBackup, validateRecipes } from "./model";
 import PhotoGallery from "./PhotoGallery";
@@ -221,16 +222,6 @@ function WorkspaceApp({workspace,appearance,changeAppearance}:{workspace:Workspa
   const [draftPhotoIds, setDraftPhotoIds] = useState<string[]>([]);
   const [photoBusy, setPhotoBusy] = useState(false);
   const [journalBusy, setJournalBusy] = useState(false);
-  const [output, setOutput] = useState("");
-  const [outputMeta, setOutputMeta] = useState<{
-    action: string;
-    recipeId: string;
-  }>({ action: "", recipeId: "" });
-  const [aiError, setAiError] = useState("");
-  const aiRequest = useRef<AbortController | null>(null);
-  useEffect(()=>()=>aiRequest.current?.abort(),[]);
-
-  const [busy, setBusy] = useState(false);
   const [cook, setCook] = useState(false);
   const [step, setStep] = useState(0);
   const recipe = recipes.find((r) => r.id === selected);
@@ -262,10 +253,6 @@ function WorkspaceApp({workspace,appearance,changeAppearance}:{workspace:Workspa
       id,
     );
     setFocusPage("");
-    aiRequest.current?.abort();
-    setBusy(false);
-    setAiError("");
-    setOutput("");
     setStep(0);
     setQuestion("");
     setChanges("");
@@ -347,18 +334,7 @@ function WorkspaceApp({workspace,appearance,changeAppearance}:{workspace:Workspa
     await putPhotos(
       backup.photos.map((photo) => ({ ...photo, id: mapping.get(photo.id)! })),
     );
-    const restored = backup.recipes.map((r) => ({
-      ...r,
-      photoIds: r.photoIds?.map((id) => mapping.get(id)!),
-      journalPages: r.journalPages?.map((p) => ({
-        ...p,
-        photoIds: p.photoIds?.map((id) => mapping.get(id)!),
-      })),
-      attempts: r.attempts.map((a) => ({
-        ...a,
-        photoIds: a.photoIds?.map((id) => mapping.get(id)!),
-      })),
-    }));
+    const restored = remapPhotoReferences(backup.recipes,mapping);
     if (before !== recipesRef.current || beforePlans !== plansRef.current)
       throw new Error(
         "Your journal changed while loading. Please try again after finishing your edits.",
@@ -455,11 +431,6 @@ function WorkspaceApp({workspace,appearance,changeAppearance}:{workspace:Workspa
       )
     )
       return;
-    if (id === selected) {
-      aiRequest.current?.abort();
-      setBusy(false);
-      setOutput("");
-    }
     setRecipes((list) =>
       list.map((r) => (r.id === id ? { ...r, deletedAt: Date.now() } : r)),
     );
@@ -493,12 +464,12 @@ function WorkspaceApp({workspace,appearance,changeAppearance}:{workspace:Workspa
     );
     setStatus("Attempt deleted.");
   }
-  function saveAIRecipe(draft: RecipeDraft) {
+  function saveAIRecipe(draft: RecipeDraft, sourceId: string) {
     const source = recipesRef.current.find(
-      (r) => r.id === outputMeta.recipeId && !r.deletedAt,
+      (r) => r.id === sourceId && !r.deletedAt,
     );
     if (!source) {
-      setAiError(
+      setStatus(
         "The source experiment was deleted. Restore it before saving this draft.",
       );
       return;
@@ -520,76 +491,6 @@ function WorkspaceApp({workspace,appearance,changeAppearance}:{workspace:Workspa
     choose(copy.id);
     navigate("recipes", "");
     setStatus("Saved a new recipe. The original journal is unchanged.");
-  }
-  async function ask(action: string, cookingQuestion = "") {
-    if (!recipe) return;
-    aiRequest.current?.abort();
-    const controller = new AbortController();
-    aiRequest.current = controller;
-    const source = recipe;
-    setBusy(true);
-    setOutput("");
-    setAiError("");
-    try {
-      const response = await fetch("/api/assist", {
-        method: "POST",
-        signal: controller.signal,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action,
-          question: cookingQuestion,
-          recipe: {
-            ...source,
-            journalPages: undefined,
-            notes: action === "question" ? source.notes : [
-              source.notes,
-              ...pagesFor(source).map(
-                (p) =>
-                  p.title +
-                  "\n" +
-                  Object.entries(p.fields ?? {})
-                    .map(([key, value]) => key + ": " + value)
-                    .join("\n") +
-                  "\n" +
-                  p.text,
-              ),
-            ].join("\n\n"),
-          },
-        }),
-      });
-      const raw = await response.text();
-      let data: { error?: string; text?: string };
-      try {
-        data = JSON.parse(raw);
-      } catch {
-        throw Error("The AI server is unavailable. Start it and try again.");
-      }
-      if (!response.ok || !data.text)
-        throw Error(data.error || "No finished answer was returned.");
-      if (aiRequest.current === controller) {
-        setOutputMeta({ action, recipeId: source.id });
-        setOutput(data.text);
-      }
-    } catch (error) {
-      if (!controller.signal.aborted)
-        setAiError(
-          error instanceof Error
-            ? error.message
-            : "Could not complete the request.",
-        );
-    } finally {
-      if (aiRequest.current === controller) setBusy(false);
-    }
-  }
-  function caption() {
-    if (!recipe) return;
-    aiRequest.current?.abort();
-    setBusy(false);
-    setAiError("");
-    setOutputMeta({ action: "caption", recipeId: recipe.id });
-    setOutput(
-      `From my kitchen experiments: ${recipe.title}. ${recipe.notes || "Testing, tasting, and making it my own."}\n\n${recipe.attempts.length} attempts and counting.\n\n#CookingJournal #RecipeExperiments #HomeCooking`,
-    );
   }
   const steps = recipe?.steps.split("\n").filter((s) => s.trim()) ?? [];
   const heading = sections.find((s) => s[0] === page)!;
@@ -665,9 +566,9 @@ function WorkspaceApp({workspace,appearance,changeAppearance}:{workspace:Workspa
             ))}
           </nav>
           <div className="navigation-note">
-            A little messy.
+            {workspace === "toddler" ? "Little days." : "A little messy."}
             <br />
-            <strong>A little more delicious.</strong>
+            <strong>{workspace === "toddler" ? "Big little memories." : "A little more delicious."}</strong>
           </div>
         </aside>
         <main className={"page-" + page}>
@@ -1144,66 +1045,14 @@ function WorkspaceApp({workspace,appearance,changeAppearance}:{workspace:Workspa
                       Open recipe →
                     </button>
                   </section>
-                  <aside className="assistant card">
-                    <div className="assistant-symbol">✧</div>
-                    <p className="eyebrow">A LITTLE HELP IN THE KITCHEN</p>
-                    <h2>Your kitchen companion.</h2>
-                    <p>Ask about technique, substitutions or recipe ideas. For calories and macros, use Nutrition in the recipe editor after recording ingredient amounts.</p>
-                    <form className="companion-question" onSubmit={e=>{e.preventDefault(); if(question.trim()) void ask("question",question.trim());}}>
-                      <label>Ask a cooking question<textarea value={question} onChange={e=>setQuestion(e.target.value)} maxLength={2000} placeholder="Why is my batter thick? Can I swap milk? Help me suggest quantities for 5 servings…" required /></label>
-                      <small>Uses this recipe's typed cooking notes and attempts. Suggestions are separate from your saved recipe; review them before editing.</small>
-                      <button className="primary" type="submit" disabled={busy || !question.trim()}>Ask companion</button>
-                    </form>
-                    <div className="assistant-actions">
-                      <button disabled={busy} onClick={() => ask("polish")}>
-                        <strong>✦ Polish my recipe</strong>
-                        <small>Turn your notes into clear instructions</small>
-                      </button>
-                      <button disabled={busy} onClick={() => ask("compare")}>
-                        <strong>↗ Learn from my attempts</strong>
-                        <small>Find what changed and what worked</small>
-                      </button>
-                      <button disabled={busy} onClick={() => ask("swaps")}>
-                        <strong>♧ Explore ingredient swaps</strong>
-                        <small>Consider alternatives for your recipe</small>
-                      </button>
-                      <button onClick={caption}>
-                        <strong>Draft a creator caption</strong>
-                        <small>Editable local template</small>
-                      </button>
-                    </div>
-                    {busy && <p role="status">Thinking through your recipe…</p>}
-                    {aiError && (
-                      <p className="inline-error" role="alert">
-                        {aiError}
-                      </p>
-                    )}
-                    {output && (
-                      <AIResult
-                        key={outputMeta.recipeId + output}
-                        text={output}
-                        recipeMode={outputMeta.action === "polish"}
-                        source={
-                          records.find((r) => r.id === outputMeta.recipeId) ??
-                          recipe
-                        }
-                        onSave={saveAIRecipe}
-                      />
-                    )}
-                    <div className="assistant-note">
-                      <strong>Your ideas. Your taste.</strong>
-                      <p>
-                        AI suggestions need your review. The AI tools require a
-                        configured server; captions work locally.
-                      </p>
-                    </div>
-                  </aside>
+                  <CompanionChat key={workspace+":"+recipe.id} recipe={recipe} initialQuestion={question} onChange={conversation=>update({conversation})} onSave={draft=>saveAIRecipe(draft,recipe.id)}/>
+
                 </div>
               )}
             </>
           )}
           <footer className="page-footer">
-            Small experiments. Recipes worth keeping.
+            {workspace === "toddler" ? "Little days. Memories worth keeping." : "Small experiments. Recipes worth keeping."}
           </footer>
         </main>
         {cook && recipe && (

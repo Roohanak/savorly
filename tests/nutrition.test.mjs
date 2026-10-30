@@ -38,7 +38,7 @@ test('incomplete nutrition does not display an invented half-batch assumption',(
 test('companion answers a supplied question and separates cooking suggestions from nutrition',()=>{
  const recipe={title:'Custard',servings:5,ingredients:'eggs and milk',steps:''};
  const request=buildRequest('question',recipe,'test','Suggest amounts for five servings');
- assert.equal(JSON.parse(request.messages[1].content).question,'Suggest amounts for five servings');
+ assert.equal(request.messages.at(-1).content,'Suggest amounts for five servings');
  assert.match(request.messages[0].content,/untested suggestion/);
  assert.match(request.messages[0].content,/Nutrition tool/);
  assert.throws(()=>buildRequest('question',recipe,'test',''));

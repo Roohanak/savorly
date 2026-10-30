@@ -1,6 +1,6 @@
 # Partner handoff
 
-Updated October 28, 2026.
+Updated October 30, 2026.
 
 ## Start here
 
@@ -17,10 +17,10 @@ Local features work without credentials. For AI, copy `.env.example` to `.env`, 
 - Recipe category/subcategory dropdowns, search, new recipe, servings preview and cook mode.
 - Linked weekly notebook/meal planner, grocery sticky notes and checkable shopping lists.
 - Local saving, complete backups and recoverable experiment deletion. Optional Supabase snapshots are prepared but live cross-device behavior is unverified.
-- AI recipe drafts, attempt comparisons and ingredient-swap suggestions through Nebius/NVIDIA. A direct cooking-question box is now implemented; independent response-quality testing remains.
-- Recipe PDF, selected-page PDF and all-pages PDF exports. The latest journal export wiring was fixed in commit `78eb2cf`, but a newly downloaded PDF has **not yet been visually verified** after that fix.
+- AI recipe drafts, attempt comparisons and ingredient-swap suggestions through Nebius/NVIDIA. A persistent multi-turn chat now supports follow-ups, Stop, Retry and New chat. Live serving conversions and recipe saving were checked; broader response-quality testing remains.
+- Recipe PDF, selected-page PDF and all-pages PDF exports. A selected-page PDF was downloaded and visually verified with replaced text, photo, sticker and ink. Check remaining long/multipage cases independently.
 
-Current automated checks: 48 tests, lint and production build passed. These do not verify physical iPad/Pencil behavior, live Supabase, deployed AI or visual PDF fidelity.
+Current automated checks: 61 tests, lint and production build passed. These do not verify physical iPad/Pencil behavior, live Supabase, deployed AI or visual PDF fidelity.
 
 ## Pick a manageable piece
 
@@ -30,7 +30,7 @@ These are proposed tasks, not assigned commitments. Tell Roohanak what you can c
 2. **End-to-end and device testing.** Check pen, eraser, photos, sticker movement/rotation/resize, Delete/Escape/undo/redo, recipes/search, planner and groceries on desktop, phone and a physical iPad/Pencil if available. Fix reproducible high-impact issues and smooth confusing interactions.
 3. **Saving and recovery.** Verify reloads, backup/restore and deleted-item recovery in a separate test profile. Confirm text, media, ink, stickers and planner state survive. Never restore over the owner's only journal.
 4. **AI usefulness.** Test and improve the explicit question flow for “why is my batter thick?”, “can I swap this ingredient?” and measurement/serving questions. Preserve supplied quantities, identify missing details and keep model reasoning out of displayed answers. Do not promise automatic photo/handwriting recognition.
-5. **Cloud and deployment, if you can cover it.** Configure and test Supabase account isolation and laptop/iPad restoration. Current support is manual snapshots, not conflict-safe live editing. Add a conflict strategy before promising automatic sync. For hosting, keep the key server-side and add authentication, usage limits and production API routing.
+5. **Cloud and deployment, if you can cover it.** Configure and test Supabase account isolation and laptop/iPad restoration. Current support is manual snapshots, not conflict-safe live editing. Add a conflict strategy before promising automatic sync. The production server now includes a demo password, signed sessions, origin checks, usage limits and static frontend routing. Render configuration is prepared; verify the final URL after account setup.
 6. **Demo together.** Help choose a stable demo flow, record the video and polish the submission. Confirm current official requirements, asset rights and license before publishing.
 
 ## Working agreement

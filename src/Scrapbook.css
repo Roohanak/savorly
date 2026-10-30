@@ -18,7 +18,7 @@
   inset: 0;
   background:
     linear-gradient(#e5dfd455, #e5dfd455),
-    url("/backgrounds/cozy-notebook.png") center/cover;
+    url("/backgrounds/cozy-desk.svg") center/320px repeat;
   z-index: -2;
   pointer-events: none;
 }
@@ -1150,3 +1150,21 @@
 .canvas-photo:hover .photo-resize-handle,.canvas-photo:hover .photo-rotate-handle,.canvas-photo:focus-visible .photo-resize-handle,.canvas-photo:focus-visible .photo-rotate-handle,.placed-sticker:hover .sticker-resize-handle,.placed-sticker:hover .sticker-rotate-handle,.placed-sticker:focus-visible .sticker-resize-handle,.placed-sticker:focus-visible .sticker-rotate-handle,.photo-resize-handle:focus-visible,.photo-rotate-handle:focus-visible,.sticker-resize-handle:focus-visible,.sticker-rotate-handle:focus-visible {opacity:1;pointer-events:auto}
 @media(hover:none){.canvas-photo.selected .photo-resize-handle,.canvas-photo.selected .photo-rotate-handle,.placed-sticker.selected .sticker-resize-handle,.placed-sticker.selected .sticker-rotate-handle {opacity:1;pointer-events:auto}}
 .canvas-photo::before,.placed-sticker::before {content:"";position:absolute;inset:-36px -10px -10px;background:transparent;pointer-events:inherit}
+.companion-page .companion-chat {min-width:0}
+.chat-heading,.chat-compose-actions {display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.chat-context-note {font-size:13px;line-height:1.6;color:#736b68}
+.chat-quick-actions {display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+.chat-quick-actions button {font-size:13px;padding:9px 12px}
+.chat-transcript {max-height:650px;overflow-y:auto;overscroll-behavior:contain;padding:8px 4px}
+.chat-message {padding:16px;border-radius:18px;margin:12px 0;border:1px solid #e8d9cf;overflow-wrap:anywhere}
+.chat-user {background:#fbefea;margin-left:10%}
+.chat-assistant {background:#fffdf9;margin-right:4%}
+.chat-message p {white-space:pre-wrap;line-height:1.65}
+.chat-message .ai-result {border:0;box-shadow:none;padding:8px 0;margin:0;background:transparent}
+.chat-speaker {font-size:12px;text-transform:uppercase;color:#9e4e59;letter-spacing:.08em}
+.chat-message .result-heading>span {display:none}
+.chat-compose {margin-top:18px;display:grid;gap:10px}
+.chat-compose label {display:grid;gap:8px}
+.chat-compose textarea {min-height:95px;resize:vertical}
+.chat-compose-actions small {color:#746d68;font-size:12px}
+@media(max-width:700px){.chat-user{margin-left:4%}.chat-assistant{margin-right:0}.chat-transcript{max-height:55vh}.chat-quick-actions button{flex:1 1 130px}}

@@ -169,6 +169,7 @@ export default function AIResult({
           >
             Save to Recipe Book
           </button>
+          <details><summary>View original AI answer</summary><div className="formatted-answer"><Markdown text={text} /></div></details>
           <p className="save-caption">
             Saves a new recipe. Your original journal stays intact.
           </p>

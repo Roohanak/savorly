@@ -11,3 +11,7 @@ test('planner scales fractions and excludes cooked meals',()=>{assert.deepEqual(
 test('planner validates dates and week boundaries',()=>{validatePlans([plan]);assert.throws(()=>validatePlans([{...plan,meals:[{...plan.meals[0],date:'2026-10-26'}]}]));assert.equal(shiftDate('2026-12-31',1),'2027-01-01');assert.equal(monday(new Date(2026,9,25)),'2026-10-19');});
 test('drawing coordinates stay inside pad and strokes are smooth',()=>{assert.deepEqual(inkPoint(150,250,{left:100,top:200,width:100,height:100}),{x:450,y:550,pressure:0.5});assert.equal(inkPoint(-1,999,{left:0,top:0,width:100,height:100}).y,1100);assert.match(strokePath([{x:0,y:0},{x:20,y:20},{x:40,y:0}]),/ Q/);});
 test('backup retains planner and recoverable deletion',()=>{const backup={version:2,recipes:[{...recipe,deletedAt:123}],photos:[],planner:[plan]};assert.deepEqual(parseBackup(backup),backup);});
+
+test('recipe yield parses Markdown headings and separate serving values',()=>{for(const heading of ['## Servings\n3','### Servings: 3','**Servings**\n3 servings','## Servings\n3 (adjusted batch)']){const d=parseRecipeDraft('# Crepes\n'+heading+'\n## Ingredients\n- 1.5 cups lentils\n## Method\n1. Blend',recipe);assert.equal(d.servings,3);assert.equal(d.ingredients,'1.5 cups lentils');}});
+
+test('recipe yield is retained when the model includes it in the recipe title',()=>{const d=parseRecipeDraft('# Crepes (3 servings)\nIngredients\n- 1.5 cups lentils\nMethod\nBlend',recipe);assert.equal(d.servings,3);});

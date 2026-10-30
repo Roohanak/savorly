@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: savorly
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 24
+      - key: AI_API_KEY
+        sync: false
+      - key: AI_BASE_URL
+        value: https://api.tokenfactory.nebius.com/v1
+      - key: AI_MODEL
+        value: nvidia/Nemotron-3_5-Lightning
+      - key: APP_ACCESS_PASSWORD
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: AI_DAILY_REQUEST_LIMIT
+        value: 100
+      - key: AI_REQUESTS_PER_MINUTE
+        value: 8

@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "server": "node --env-file=.env server/index.mjs",
-    "test": "node --experimental-strip-types --test tests/*.test.mjs"
+    "test": "node --experimental-strip-types --test tests/*.test.mjs",
+    "start": "node --env-file-if-exists=.env server/index.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0",
